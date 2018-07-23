@@ -1,0 +1,43 @@
+{
+    "name": "EmployeeSkill",
+    "fields": [
+        {
+            "fieldName": "name",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "level",
+            "fieldType": "Integer",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "employeeSkillCertificate",
+            "otherEntityName": "employeeSkillCertificate",
+            "otherEntityRelationshipName": "employeeSkill"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": "required",
+            "relationshipName": "employee",
+            "otherEntityName": "employee",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20180723072620",
+    "entityTableName": "employee_skill",
+    "dto": "mapstruct",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": true,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

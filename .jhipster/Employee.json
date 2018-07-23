@@ -1,0 +1,29 @@
+{
+    "name": "Employee",
+    "fields": [
+        {
+            "fieldName": "fullname",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "skill",
+            "otherEntityName": "employeeSkill",
+            "otherEntityRelationshipName": "employee"
+        }
+    ],
+    "changelogDate": "20180723072619",
+    "entityTableName": "employee",
+    "dto": "mapstruct",
+    "pagination": "no",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": true,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

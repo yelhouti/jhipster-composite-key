@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <!--
+        Added the constraints for entity EmployeeSkillCertificate.
+    -->
+    <changeSet id="20180723072622-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="certificate_type_id"
+                                 baseTableName="employee_skill_certificate"
+                                 constraintName="fk_employee_skill_certificate_certificate_type_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="certificate_type"/>
+
+        <addForeignKeyConstraint baseColumnNames="employee_skill_id"
+                                 baseTableName="employee_skill_certificate"
+                                 constraintName="fk_employee_skill_certificate_employee_skill_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="employee_skill"/>
+
+    </changeSet>
+</databaseChangeLog>

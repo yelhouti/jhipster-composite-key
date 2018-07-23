@@ -1,0 +1,81 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="jhi-employee-skill-certificate-heading">Create or edit a Employee Skill Certificate</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!employeeSkillCertificate.id">
+                    <label for="id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="employeeSkillCertificate.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_grade">Grade</label>
+                    <input type="number" class="form-control" name="grade" id="field_grade"
+                        [(ngModel)]="employeeSkillCertificate.grade" required/>
+                    <div [hidden]="!(editForm.controls.grade?.dirty && editForm.controls.grade?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.grade?.errors?.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.grade?.errors?.number">
+                            This field should be a number.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_date">Date</label>
+                    <div class="input-group">
+                        <input id="field_date" type="text" class="form-control" name="date" ngbDatepicker  #dateDp="ngbDatepicker" [(ngModel)]="employeeSkillCertificate.date"
+                        required/>
+                        <span class="input-group-append">
+                            <button type="button" class="btn btn-secondary" (click)="dateDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
+                        </span>
+                    </div>
+                    <div [hidden]="!(editForm.controls.date?.dirty && editForm.controls.date?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.date?.errors?.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_certificateType">Certificate Type</label>
+                    <select class="form-control" id="field_certificateType" name="certificateType" [(ngModel)]="employeeSkillCertificate.certificateTypeId"  required>
+                        <option *ngIf="!editForm.value.certificateType" [ngValue]="null" selected></option>
+                        <option [ngValue]="certificateTypeOption.id" *ngFor="let certificateTypeOption of certificatetypes; trackBy: trackCertificateTypeById">{{certificateTypeOption.name}}</option>
+                    </select>
+                </div>
+                <div [hidden]="!(editForm.controls.certificateType?.dirty && editForm.controls.certificateType?.invalid)">
+                    <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.certificateType?.errors?.required">
+                        This field is required.
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_employeeSkill">Employee Skill</label>
+                    <select class="form-control" id="field_employeeSkill" name="employeeSkill" [(ngModel)]="employeeSkillCertificate.employeeSkillId"  required>
+                        <option *ngIf="!editForm.value.employeeSkill" [ngValue]="null" selected></option>
+                        <option [ngValue]="employeeSkillOption.id" *ngFor="let employeeSkillOption of employeeskills; trackBy: trackEmployeeSkillById">{{employeeSkillOption.id}}</option>
+                    </select>
+                </div>
+                <div [hidden]="!(editForm.controls.employeeSkill?.dirty && editForm.controls.employeeSkill?.invalid)">
+                    <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.employeeSkill?.errors?.required">
+                        This field is required.
+                    </small>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
