@@ -26,7 +26,7 @@ public class EmployeeCriteria implements Serializable {
     private static final long serialVersionUID = 1L;
 
 
-    private LongFilter id;
+    private StringFilter id;
 
     private StringFilter fullname;
 
@@ -35,11 +35,11 @@ public class EmployeeCriteria implements Serializable {
     public EmployeeCriteria() {
     }
 
-    public LongFilter getId() {
+    public StringFilter getId() {
         return id;
     }
 
-    public void setId(LongFilter id) {
+    public void setId(StringFilter id) {
         this.id = id;
     }
 

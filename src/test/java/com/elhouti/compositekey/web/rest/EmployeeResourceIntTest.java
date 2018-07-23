@@ -45,6 +45,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = CompositekeyApp.class)
 public class EmployeeResourceIntTest {
 
+    private static final String DEFAULT_EMPLOYEE_ID = "AAAAAAAAAA";
+    private static final String OTHER_EMPLOYEE_ID = "BBBBBBBBB";
+
     private static final String DEFAULT_FULLNAME = "AAAAAAAAAA";
     private static final String UPDATED_FULLNAME = "BBBBBBBBBB";
 
@@ -54,7 +57,7 @@ public class EmployeeResourceIntTest {
 
     @Autowired
     private EmployeeMapper employeeMapper;
-    
+
 
     @Autowired
     private EmployeeService employeeService;
@@ -97,6 +100,7 @@ public class EmployeeResourceIntTest {
      */
     public static Employee createEntity(EntityManager em) {
         Employee employee = new Employee()
+            .id(DEFAULT_EMPLOYEE_ID)
             .fullname(DEFAULT_FULLNAME);
         return employee;
     }
@@ -128,17 +132,17 @@ public class EmployeeResourceIntTest {
     @Test
     @Transactional
     public void createEmployeeWithExistingId() throws Exception {
+        employeeRepository.saveAndFlush(employee);
         int databaseSizeBeforeCreate = employeeRepository.findAll().size();
 
         // Create the Employee with an existing ID
-        employee.setId(1L);
         EmployeeDTO employeeDTO = employeeMapper.toDto(employee);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restEmployeeMockMvc.perform(post("/api/employees")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(employeeDTO)))
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isConflict());
 
         // Validate the Employee in the database
         List<Employee> employeeList = employeeRepository.findAll();
@@ -174,10 +178,10 @@ public class EmployeeResourceIntTest {
         restEmployeeMockMvc.perform(get("/api/employees?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(employee.getId().intValue())))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(employee.getId().toString())))
             .andExpect(jsonPath("$.[*].fullname").value(hasItem(DEFAULT_FULLNAME.toString())));
     }
-    
+
 
     @Test
     @Transactional
@@ -189,7 +193,7 @@ public class EmployeeResourceIntTest {
         restEmployeeMockMvc.perform(get("/api/employees/{id}", employee.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.id").value(employee.getId().intValue()))
+            .andExpect(jsonPath("$.id").value(employee.getId().toString()))
             .andExpect(jsonPath("$.fullname").value(DEFAULT_FULLNAME.toString()));
     }
 
@@ -257,7 +261,7 @@ public class EmployeeResourceIntTest {
         restEmployeeMockMvc.perform(get("/api/employees?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(employee.getId().intValue())))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(employee.getId().toString())))
             .andExpect(jsonPath("$.[*].fullname").value(hasItem(DEFAULT_FULLNAME.toString())));
     }
 
@@ -276,7 +280,7 @@ public class EmployeeResourceIntTest {
     @Transactional
     public void getNonExistingEmployee() throws Exception {
         // Get the employee
-        restEmployeeMockMvc.perform(get("/api/employees/{id}", Long.MAX_VALUE))
+        restEmployeeMockMvc.perform(get("/api/employees/{id}", OTHER_EMPLOYEE_ID))
             .andExpect(status().isNotFound());
     }
 
@@ -349,12 +353,12 @@ public class EmployeeResourceIntTest {
     @Transactional
     public void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(Employee.class);
-        Employee employee1 = new Employee();
-        employee1.setId(1L);
-        Employee employee2 = new Employee();
-        employee2.setId(employee1.getId());
+        Employee employee1 = new Employee()
+            .id(DEFAULT_EMPLOYEE_ID);
+        Employee employee2 = new Employee()
+            .id(employee1.getId());
         assertThat(employee1).isEqualTo(employee2);
-        employee2.setId(2L);
+        employee2.setId(OTHER_EMPLOYEE_ID);
         assertThat(employee1).isNotEqualTo(employee2);
         employee1.setId(null);
         assertThat(employee1).isNotEqualTo(employee2);
@@ -365,12 +369,12 @@ public class EmployeeResourceIntTest {
     public void dtoEqualsVerifier() throws Exception {
         TestUtil.equalsVerifier(EmployeeDTO.class);
         EmployeeDTO employeeDTO1 = new EmployeeDTO();
-        employeeDTO1.setId(1L);
+        employeeDTO1.setId(DEFAULT_EMPLOYEE_ID);
         EmployeeDTO employeeDTO2 = new EmployeeDTO();
         assertThat(employeeDTO1).isNotEqualTo(employeeDTO2);
         employeeDTO2.setId(employeeDTO1.getId());
         assertThat(employeeDTO1).isEqualTo(employeeDTO2);
-        employeeDTO2.setId(2L);
+        employeeDTO2.setId(OTHER_EMPLOYEE_ID);
         assertThat(employeeDTO1).isNotEqualTo(employeeDTO2);
         employeeDTO1.setId(null);
         assertThat(employeeDTO1).isNotEqualTo(employeeDTO2);
@@ -379,7 +383,7 @@ public class EmployeeResourceIntTest {
     @Test
     @Transactional
     public void testEntityFromId() {
-        assertThat(employeeMapper.fromId(42L).getId()).isEqualTo(42);
+        assertThat(employeeMapper.fromId(DEFAULT_EMPLOYEE_ID).getId()).isEqualTo(DEFAULT_EMPLOYEE_ID);
         assertThat(employeeMapper.fromId(null)).isNull();
     }
 }

@@ -58,7 +58,7 @@ public class EmployeeSkillResourceIntTest {
 
     @Autowired
     private EmployeeSkillMapper employeeSkillMapper;
-    
+
 
     @Autowired
     private EmployeeSkillService employeeSkillService;
@@ -208,7 +208,7 @@ public class EmployeeSkillResourceIntTest {
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
             .andExpect(jsonPath("$.[*].level").value(hasItem(DEFAULT_LEVEL)));
     }
-    
+
 
     @Test
     @Transactional
@@ -329,42 +329,19 @@ public class EmployeeSkillResourceIntTest {
         defaultEmployeeSkillShouldBeFound("level.lessThan=" + UPDATED_LEVEL);
     }
 
-
-    @Test
-    @Transactional
-    public void getAllEmployeeSkillsByEmployeeSkillCertificateIsEqualToSomething() throws Exception {
-        // Initialize the database
-        EmployeeSkillCertificate employeeSkillCertificate = EmployeeSkillCertificateResourceIntTest.createEntity(em);
-        em.persist(employeeSkillCertificate);
-        em.flush();
-        employeeSkill.addEmployeeSkillCertificate(employeeSkillCertificate);
-        employeeSkillRepository.saveAndFlush(employeeSkill);
-        Long employeeSkillCertificateId = employeeSkillCertificate.getId();
-
-        // Get all the employeeSkillList where employeeSkillCertificate equals to employeeSkillCertificateId
-        defaultEmployeeSkillShouldBeFound("employeeSkillCertificateId.equals=" + employeeSkillCertificateId);
-
-        // Get all the employeeSkillList where employeeSkillCertificate equals to employeeSkillCertificateId + 1
-        defaultEmployeeSkillShouldNotBeFound("employeeSkillCertificateId.equals=" + (employeeSkillCertificateId + 1));
-    }
-
-
     @Test
     @Transactional
     public void getAllEmployeeSkillsByEmployeeIsEqualToSomething() throws Exception {
         // Initialize the database
-        Employee employee = EmployeeResourceIntTest.createEntity(em);
-        em.persist(employee);
-        em.flush();
-        employeeSkill.setEmployee(employee);
+
         employeeSkillRepository.saveAndFlush(employeeSkill);
-        Long employeeId = employee.getId();
+        String employeeId = employeeSkill.getEmployee().getId();
 
         // Get all the employeeSkillList where employee equals to employeeId
         defaultEmployeeSkillShouldBeFound("employeeId.equals=" + employeeId);
 
         // Get all the employeeSkillList where employee equals to employeeId + 1
-        defaultEmployeeSkillShouldNotBeFound("employeeId.equals=" + (employeeId + 1));
+        defaultEmployeeSkillShouldNotBeFound("employeeId.equals=" + (employeeId + "a"));
     }
 
     /**

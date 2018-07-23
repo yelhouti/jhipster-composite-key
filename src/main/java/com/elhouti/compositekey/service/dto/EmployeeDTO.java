@@ -9,16 +9,17 @@ import java.util.Objects;
  */
 public class EmployeeDTO implements Serializable {
 
-    private Long id;
+    @NotNull
+    private String id;
 
     @NotNull
     private String fullname;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

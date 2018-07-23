@@ -5,7 +5,7 @@ export interface IEmployeeSkill {
     name?: string;
     level?: number;
     employeeSkillCertificates?: IEmployeeSkillCertificate[];
-    employeeId?: number;
+    employeeId?: string;
 }
 
 export class EmployeeSkill implements IEmployeeSkill {
@@ -14,6 +14,6 @@ export class EmployeeSkill implements IEmployeeSkill {
         public name?: string,
         public level?: number,
         public employeeSkillCertificates?: IEmployeeSkillCertificate[],
-        public employeeId?: number
+        public employeeId?: string
     ) {}
 }

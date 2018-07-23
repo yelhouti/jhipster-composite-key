@@ -17,7 +17,7 @@ public class EmployeeSkillDTO implements Serializable {
     @NotNull
     private Integer level;
 
-    private Long employeeId;
+    private String employeeId;
 
     public Long getId() {
         return id;
@@ -43,11 +43,11 @@ public class EmployeeSkillDTO implements Serializable {
         this.level = level;
     }
 
-    public Long getEmployeeId() {
+    public String getEmployeeId() {
         return employeeId;
     }
 
-    public void setEmployeeId(Long employeeId) {
+    public void setEmployeeId(String employeeId) {
         this.employeeId = employeeId;
     }
 

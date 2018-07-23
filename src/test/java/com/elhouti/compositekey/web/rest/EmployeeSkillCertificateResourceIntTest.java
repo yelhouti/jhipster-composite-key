@@ -60,7 +60,7 @@ public class EmployeeSkillCertificateResourceIntTest {
 
     @Autowired
     private EmployeeSkillCertificateMapper employeeSkillCertificateMapper;
-    
+
 
     @Autowired
     private EmployeeSkillCertificateService employeeSkillCertificateService;
@@ -215,7 +215,7 @@ public class EmployeeSkillCertificateResourceIntTest {
             .andExpect(jsonPath("$.[*].grade").value(hasItem(DEFAULT_GRADE)))
             .andExpect(jsonPath("$.[*].date").value(hasItem(DEFAULT_DATE.toString())));
     }
-    
+
 
     @Test
     @Transactional
@@ -387,12 +387,8 @@ public class EmployeeSkillCertificateResourceIntTest {
     @Transactional
     public void getAllEmployeeSkillCertificatesByEmployeeSkillIsEqualToSomething() throws Exception {
         // Initialize the database
-        EmployeeSkill employeeSkill = EmployeeSkillResourceIntTest.createEntity(em);
-        em.persist(employeeSkill);
-        em.flush();
-        employeeSkillCertificate.setEmployeeSkill(employeeSkill);
         employeeSkillCertificateRepository.saveAndFlush(employeeSkillCertificate);
-        Long employeeSkillId = employeeSkill.getId();
+        Long employeeSkillId = employeeSkillCertificate.getEmployeeSkill().getId();
 
         // Get all the employeeSkillCertificateList where employeeSkill equals to employeeSkillId
         defaultEmployeeSkillCertificateShouldBeFound("employeeSkillId.equals=" + employeeSkillId);

@@ -34,7 +34,7 @@ public class EmployeeSkillCriteria implements Serializable {
 
     private LongFilter employeeSkillCertificateId;
 
-    private LongFilter employeeId;
+    private StringFilter employeeId;
 
     public EmployeeSkillCriteria() {
     }
@@ -71,11 +71,11 @@ public class EmployeeSkillCriteria implements Serializable {
         this.employeeSkillCertificateId = employeeSkillCertificateId;
     }
 
-    public LongFilter getEmployeeId() {
+    public StringFilter getEmployeeId() {
         return employeeId;
     }
 
-    public void setEmployeeId(LongFilter employeeId) {
+    public void setEmployeeId(StringFilter employeeId) {
         this.employeeId = employeeId;
     }
 
