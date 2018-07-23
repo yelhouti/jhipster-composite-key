@@ -1,0 +1,48 @@
+entity Employee{
+	//this will be the id
+    //we should be able to override the id, by having any attribute/relahsioship ad primaryKey
+    //ex: userId String primaryKey
+    //or: id String primaryKey
+    //TODO make id String
+    fullname String required
+}
+
+entity EmployeeSkill{
+	//TODO compositeId employeeSkill.name, employee.id
+    //should be something like: name String required primaryKey
+	name String required
+	level Integer required
+}
+
+relationship OneToMany{
+	//equivalent: Employee{skill(name)} to EmployeeSkill{employee(id) required}
+    //should be something like: Employee{skill(name)} to EmployeeSkill{employee(id) required primaryKey}
+    //employeeUserId is part of the id of EmployeeSkill
+	Employee{skill(name)} to EmployeeSkill{employee required}
+}
+
+entity CertificateType{
+	//default id
+	name String required
+}
+
+//primary key is composite from EmployeeSkill.employee.id, EmployeeSkill.name, CertficiateType.id
+entity EmployeeSkillCertificate{
+    //TODO compositeId EmployeeSkill.employee.id, EmployeeSkill.name, CertficiateType.id
+	grade Integer required
+    date LocalDate required
+}
+
+relationship OneToMany{
+	//should be something like: CertificateType to EmployeeSkillCertificate{certificateType(name) required primaryKey}
+	CertificateType to EmployeeSkillCertificate{certificateType(name) required}
+}
+
+relationship OneToMany{
+	//should be something like: EmployeeSkill to EmployeeSkillCertificate{employeeSkill required primaryKey}
+	EmployeeSkill to EmployeeSkillCertificate{employeeSkill required}
+}
+
+dto * with mapstruct
+service * with serviceImpl
+filter *
