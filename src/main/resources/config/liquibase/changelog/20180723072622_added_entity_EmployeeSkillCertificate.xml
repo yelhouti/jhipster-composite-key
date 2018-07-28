@@ -34,13 +34,17 @@
                 <constraints nullable="false" />
             </column>
 
-            <column name="employee_skill_id" type="bigint">
+            <column name="employee_skill_employee_id" type="varchar(255)">
+                <constraints  nullable="false" />
+            </column>
+
+            <column name="employee_skill_name" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
 
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
-        
+
     </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
 </databaseChangeLog>

@@ -13,6 +13,8 @@ describe('Component Tests', () => {
         let comp: EmployeeSkillUpdateComponent;
         let fixture: ComponentFixture<EmployeeSkillUpdateComponent>;
         let service: EmployeeSkillService;
+        const DEFAULT_EMPLOYEE_ID = 'AAAAAAAAAAA';
+        const DEFAULT_NAME = 'AAAAAAAAAAA';
 
         beforeEach(() => {
             TestBed.configureTestingModule({
@@ -32,10 +34,11 @@ describe('Component Tests', () => {
                 'Should call update service on save for existing entity',
                 fakeAsync(() => {
                     // GIVEN
-                    const entity = new EmployeeSkill(123);
+                    const entity = new EmployeeSkill(DEFAULT_EMPLOYEE_ID, DEFAULT_NAME);
                     spyOn(service, 'update').and.returnValue(of(new HttpResponse({ body: entity })));
                     comp.employeeSkill = entity;
                     // WHEN
+                    comp.edit = true;
                     comp.save();
                     tick(); // simulate async
 

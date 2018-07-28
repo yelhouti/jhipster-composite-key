@@ -14,39 +14,37 @@
         <table class="table table-striped">
             <thead>
             <tr>
-            <th><span>ID</span></th>
+            <th><span>Employee</span></th>
             <th><span>Name</span></th>
             <th><span>Level</span></th>
-            <th><span>Employee</span></th>
             <th></th>
             </tr>
             </thead>
             <tbody>
             <tr *ngFor="let employeeSkill of employeeSkills ;trackBy: trackId">
-                <td><a [routerLink]="['/employee-skill', employeeSkill.id, 'view' ]">{{employeeSkill.id}}</a></td>
-                <td>{{employeeSkill.name}}</td>
-                <td>{{employeeSkill.level}}</td>
                 <td>
                     <div *ngIf="employeeSkill.employeeId">
                         <a [routerLink]="['../employee', employeeSkill.employeeId , 'view' ]" >{{employeeSkill.employeeId}}</a>
                     </div>
                 </td>
+                <td>{{employeeSkill.name}}</td>
+                <td>{{employeeSkill.level}}</td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"
-                                [routerLink]="['/employee-skill', employeeSkill.id, 'view' ]"
+                                [routerLink]="['/employee-skill', employeeSkill.employeeId, employeeSkill.name, 'view' ]"
                                 class="btn btn-info btn-sm">
                             <fa-icon [icon]="'eye'"></fa-icon>
                             <span class="d-none d-md-inline">View</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/employee-skill', employeeSkill.id, 'edit']"
+                                [routerLink]="['/employee-skill', employeeSkill.employeeId, employeeSkill.name, 'edit']"
                                 class="btn btn-primary btn-sm">
                             <fa-icon [icon]="'pencil-alt'"></fa-icon>
                             <span class="d-none d-md-inline">Edit</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'employee-skill/'+ employeeSkill.id + '/delete'} }]"
+                                [routerLink]="['/', { outlets: { popup: 'employee-skill/'+ employeeSkill.employeeId + '/' + employeeSkill.name + '/delete'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">

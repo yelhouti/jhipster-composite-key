@@ -13,6 +13,8 @@ describe('Component Tests', () => {
         let comp: EmployeeSkillComponent;
         let fixture: ComponentFixture<EmployeeSkillComponent>;
         let service: EmployeeSkillService;
+        const DEFAULT_EMPLOYEE_ID = 'AAAAAAAAAAA';
+        const DEFAULT_NAME = 'AAAAAAAAAAA';
 
         beforeEach(() => {
             TestBed.configureTestingModule({
@@ -34,7 +36,7 @@ describe('Component Tests', () => {
             spyOn(service, 'query').and.returnValue(
                 of(
                     new HttpResponse({
-                        body: [new EmployeeSkill(123)],
+                        body: [new EmployeeSkill(DEFAULT_EMPLOYEE_ID, DEFAULT_NAME)],
                         headers
                     })
                 )
@@ -45,7 +47,7 @@ describe('Component Tests', () => {
 
             // THEN
             expect(service.query).toHaveBeenCalled();
-            expect(comp.employeeSkills[0]).toEqual(jasmine.objectContaining({ id: 123 }));
+            expect(comp.employeeSkills[0]).toEqual(jasmine.objectContaining({ employeeId: DEFAULT_EMPLOYEE_ID, name: DEFAULT_NAME }));
         });
     });
 });

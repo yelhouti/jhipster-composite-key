@@ -15,6 +15,8 @@ describe('Component Tests', () => {
         let service: EmployeeSkillService;
         let mockEventManager: any;
         let mockActiveModal: any;
+        const DEFAULT_EMPLOYEE_ID = 'AAAAAAAAAAA';
+        const DEFAULT_NAME = 'AAAAAAAAAAA';
 
         beforeEach(() => {
             TestBed.configureTestingModule({
@@ -31,22 +33,25 @@ describe('Component Tests', () => {
         });
 
         describe('confirmDelete', () => {
-            it('Should call delete service on confirmDelete', inject(
-                [],
-                fakeAsync(() => {
-                    // GIVEN
-                    spyOn(service, 'delete').and.returnValue(of({}));
+            it(
+                'Should call delete service on confirmDelete',
+                inject(
+                    [],
+                    fakeAsync(() => {
+                        // GIVEN
+                        spyOn(service, 'delete').and.returnValue(of({}));
 
-                    // WHEN
-                    comp.confirmDelete(123);
-                    tick();
+                        // WHEN
+                        comp.confirmDelete(DEFAULT_EMPLOYEE_ID, DEFAULT_NAME);
+                        tick();
 
-                    // THEN
-                    expect(service.delete).toHaveBeenCalledWith(123);
-                    expect(mockActiveModal.dismissSpy).toHaveBeenCalled();
-                    expect(mockEventManager.broadcastSpy).toHaveBeenCalled();
-                })
-            ));
+                        // THEN
+                        expect(service.delete).toHaveBeenCalledWith(DEFAULT_EMPLOYEE_ID, DEFAULT_NAME);
+                        expect(mockActiveModal.dismissSpy).toHaveBeenCalled();
+                        expect(mockEventManager.broadcastSpy).toHaveBeenCalled();
+                    })
+                )
+            );
         });
     });
 });

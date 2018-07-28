@@ -1,5 +1,7 @@
 package com.elhouti.compositekey.service.dto;
 
+import com.elhouti.compositekey.domain.EmployeeSkillId;
+
 import java.time.LocalDate;
 import javax.validation.constraints.*;
 import java.io.Serializable;
@@ -22,7 +24,7 @@ public class EmployeeSkillCertificateDTO implements Serializable {
 
     private String certificateTypeName;
 
-    private Long employeeSkillId;
+    private EmployeeSkillId employeeSkillId;
 
     public Long getId() {
         return id;
@@ -64,11 +66,11 @@ public class EmployeeSkillCertificateDTO implements Serializable {
         this.certificateTypeName = certificateTypeName;
     }
 
-    public Long getEmployeeSkillId() {
+    public EmployeeSkillId getEmployeeSkillId() {
         return employeeSkillId;
     }
 
-    public void setEmployeeSkillId(Long employeeSkillId) {
+    public void setEmployeeSkillId(EmployeeSkillId employeeSkillId) {
         this.employeeSkillId = employeeSkillId;
     }
 

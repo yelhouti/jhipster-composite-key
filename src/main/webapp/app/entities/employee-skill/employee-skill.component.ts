@@ -45,7 +45,7 @@ export class EmployeeSkillComponent implements OnInit, OnDestroy {
     }
 
     trackId(index: number, item: IEmployeeSkill) {
-        return item.id;
+        return item.employeeId + ',' + item.name;
     }
 
     registerChangeInEmployeeSkills() {

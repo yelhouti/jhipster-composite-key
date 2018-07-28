@@ -1,10 +1,16 @@
 <div class="row justify-content-center">
     <div class="col-8">
         <div *ngIf="employeeSkill">
-            <h2><span>Employee Skill</span> {{employeeSkill.id}}</h2>
+            <h2><span>Employee Skill</span></h2>
             <hr>
             <jhi-alert-error></jhi-alert-error>
             <dl class="row-md jh-entity-details">
+                <dt><span>Employee</span></dt>
+                <dd>
+                    <div *ngIf="employeeSkill.employeeId">
+                        <a [routerLink]="['/employee', employeeSkill.employeeId, 'view']">{{employeeSkill.employeeId}}</a>
+                    </div>
+                </dd>
                 <dt><span>Name</span></dt>
                 <dd>
                     <span>{{employeeSkill.name}}</span>
@@ -12,12 +18,6 @@
                 <dt><span>Level</span></dt>
                 <dd>
                     <span>{{employeeSkill.level}}</span>
-                </dd>
-                <dt><span>Employee</span></dt>
-                <dd>
-                    <div *ngIf="employeeSkill.employeeId">
-                        <a [routerLink]="['/employee', employeeSkill.employeeId, 'view']">{{employeeSkill.employeeId}}</a>
-                    </div>
                 </dd>
             </dl>
 
@@ -28,7 +28,7 @@
             </button>
 
             <button type="button"
-                    [routerLink]="['/employee-skill', employeeSkill.id, 'edit']"
+                    [routerLink]="['/employee-skill', employeeSkill.employeeId, employeeSkill.name, 'edit']"
                     class="btn btn-primary">
                 <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
             </button>

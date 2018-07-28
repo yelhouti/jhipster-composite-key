@@ -89,7 +89,7 @@ export class EmployeeSkillCertificateUpdateComponent implements OnInit {
     }
 
     trackEmployeeSkillById(index: number, item: IEmployeeSkill) {
-        return item.id;
+        return item.employeeId + ',' + item.name;
     }
     get employeeSkillCertificate() {
         return this._employeeSkillCertificate;

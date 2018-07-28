@@ -4,6 +4,7 @@ import com.elhouti.compositekey.CompositekeyApp;
 
 import com.elhouti.compositekey.domain.Employee;
 import com.elhouti.compositekey.domain.EmployeeSkill;
+import com.elhouti.compositekey.domain.EmployeeSkillId;
 import com.elhouti.compositekey.repository.EmployeeRepository;
 import com.elhouti.compositekey.service.EmployeeService;
 import com.elhouti.compositekey.service.dto.EmployeeDTO;
@@ -234,24 +235,6 @@ public class EmployeeResourceIntTest {
 
         // Get all the employeeList where fullname is null
         defaultEmployeeShouldNotBeFound("fullname.specified=false");
-    }
-
-    @Test
-    @Transactional
-    public void getAllEmployeesBySkillIsEqualToSomething() throws Exception {
-        // Initialize the database
-        EmployeeSkill skill = EmployeeSkillResourceIntTest.createEntity(em);
-        em.persist(skill);
-        em.flush();
-        employee.addSkill(skill);
-        employeeRepository.saveAndFlush(employee);
-        Long skillId = skill.getId();
-
-        // Get all the employeeList where skill equals to skillId
-        defaultEmployeeShouldBeFound("skillId.equals=" + skillId);
-
-        // Get all the employeeList where skill equals to skillId + 1
-        defaultEmployeeShouldNotBeFound("skillId.equals=" + (skillId + 1));
     }
 
     /**

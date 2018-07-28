@@ -9,23 +9,14 @@ import java.util.Objects;
  */
 public class EmployeeSkillDTO implements Serializable {
 
-    private Long id;
-
     @NotNull
     private String name;
 
     @NotNull
     private Integer level;
 
+    @NotNull
     private String employeeId;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -61,24 +52,28 @@ public class EmployeeSkillDTO implements Serializable {
         }
 
         EmployeeSkillDTO employeeSkillDTO = (EmployeeSkillDTO) o;
-        if (employeeSkillDTO.getId() == null || getId() == null) {
+        if(employeeSkillDTO.getEmployeeId() == null || getEmployeeId() == null ||
+            employeeSkillDTO.getName() == null || getName() == null) {
             return false;
         }
-        return Objects.equals(getId(), employeeSkillDTO.getId());
+        return Objects.equals(getEmployeeId(), employeeSkillDTO.getEmployeeId()) &&
+            Objects.equals(getName(), employeeSkillDTO.getName());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
-    }
+
+            int result = 17;
+            result = 31 * result + Objects.hashCode(this.employeeId);
+            result = 31 * result + Objects.hashCode(this.name);
+            return result;    }
 
     @Override
     public String toString() {
         return "EmployeeSkillDTO{" +
-            "id=" + getId() +
+            ", employee=" + getEmployeeId() +
             ", name='" + getName() + "'" +
             ", level=" + getLevel() +
-            ", employee=" + getEmployeeId() +
             "}";
     }
 }

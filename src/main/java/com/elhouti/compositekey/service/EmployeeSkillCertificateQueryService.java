@@ -85,9 +85,6 @@ public class EmployeeSkillCertificateQueryService extends QueryService<EmployeeS
             if (criteria.getCertificateTypeId() != null) {
                 specification = specification.and(buildReferringEntitySpecification(criteria.getCertificateTypeId(), EmployeeSkillCertificate_.certificateType, CertificateType_.id));
             }
-            if (criteria.getEmployeeSkillId() != null) {
-                specification = specification.and(buildReferringEntitySpecification(criteria.getEmployeeSkillId(), EmployeeSkillCertificate_.employeeSkill, EmployeeSkill_.id));
-            }
         }
         return specification;
     }

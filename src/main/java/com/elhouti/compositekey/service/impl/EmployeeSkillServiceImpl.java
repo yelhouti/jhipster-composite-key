@@ -1,5 +1,6 @@
 package com.elhouti.compositekey.service.impl;
 
+import com.elhouti.compositekey.domain.EmployeeSkillId;
 import com.elhouti.compositekey.service.EmployeeSkillService;
 import com.elhouti.compositekey.domain.EmployeeSkill;
 import com.elhouti.compositekey.repository.EmployeeSkillRepository;
@@ -70,7 +71,7 @@ public class EmployeeSkillServiceImpl implements EmployeeSkillService {
      */
     @Override
     @Transactional(readOnly = true)
-    public Optional<EmployeeSkillDTO> findOne(Long id) {
+    public Optional<EmployeeSkillDTO> findOne(EmployeeSkillId id) {
         log.debug("Request to get EmployeeSkill : {}", id);
         return employeeSkillRepository.findById(id)
             .map(employeeSkillMapper::toDto);
@@ -82,7 +83,7 @@ public class EmployeeSkillServiceImpl implements EmployeeSkillService {
      * @param id the id of the entity
      */
     @Override
-    public void delete(Long id) {
+    public void delete(EmployeeSkillId id) {
         log.debug("Request to delete EmployeeSkill : {}", id);
         employeeSkillRepository.deleteById(id);
     }

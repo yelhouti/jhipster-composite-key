@@ -79,9 +79,6 @@ public class EmployeeQueryService extends QueryService<Employee> {
             if (criteria.getFullname() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getFullname(), Employee_.fullname));
             }
-            if (criteria.getSkillId() != null) {
-                specification = specification.and(buildReferringEntitySpecification(criteria.getSkillId(), Employee_.skills, EmployeeSkill_.id));
-            }
         }
         return specification;
     }

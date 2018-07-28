@@ -34,8 +34,6 @@ public class EmployeeSkillCertificateCriteria implements Serializable {
 
     private LongFilter certificateTypeId;
 
-    private LongFilter employeeSkillId;
-
     public EmployeeSkillCertificateCriteria() {
     }
 
@@ -71,14 +69,6 @@ public class EmployeeSkillCertificateCriteria implements Serializable {
         this.certificateTypeId = certificateTypeId;
     }
 
-    public LongFilter getEmployeeSkillId() {
-        return employeeSkillId;
-    }
-
-    public void setEmployeeSkillId(LongFilter employeeSkillId) {
-        this.employeeSkillId = employeeSkillId;
-    }
-
     @Override
     public String toString() {
         return "EmployeeSkillCertificateCriteria{" +
@@ -86,7 +76,6 @@ public class EmployeeSkillCertificateCriteria implements Serializable {
                 (grade != null ? "grade=" + grade + ", " : "") +
                 (date != null ? "date=" + date + ", " : "") +
                 (certificateTypeId != null ? "certificateTypeId=" + certificateTypeId + ", " : "") +
-                (employeeSkillId != null ? "employeeSkillId=" + employeeSkillId + ", " : "") +
             "}";
     }
 

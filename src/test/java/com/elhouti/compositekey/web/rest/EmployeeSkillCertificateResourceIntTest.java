@@ -5,6 +5,7 @@ import com.elhouti.compositekey.CompositekeyApp;
 import com.elhouti.compositekey.domain.EmployeeSkillCertificate;
 import com.elhouti.compositekey.domain.CertificateType;
 import com.elhouti.compositekey.domain.EmployeeSkill;
+import com.elhouti.compositekey.domain.EmployeeSkillId;
 import com.elhouti.compositekey.repository.EmployeeSkillCertificateRepository;
 import com.elhouti.compositekey.service.EmployeeSkillCertificateService;
 import com.elhouti.compositekey.service.dto.EmployeeSkillCertificateDTO;
@@ -47,6 +48,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = CompositekeyApp.class)
 public class EmployeeSkillCertificateResourceIntTest {
+
+    private static final EmployeeSkillId DEFAULT_EMPLOYEE_SKILL_ID = new EmployeeSkillId("BBBBBBBBB", "BBBBBBBBB");
 
     private static final Integer DEFAULT_GRADE = 1;
     private static final Integer UPDATED_GRADE = 2;
@@ -380,21 +383,6 @@ public class EmployeeSkillCertificateResourceIntTest {
 
         // Get all the employeeSkillCertificateList where certificateType equals to certificateTypeId + 1
         defaultEmployeeSkillCertificateShouldNotBeFound("certificateTypeId.equals=" + (certificateTypeId + 1));
-    }
-
-
-    @Test
-    @Transactional
-    public void getAllEmployeeSkillCertificatesByEmployeeSkillIsEqualToSomething() throws Exception {
-        // Initialize the database
-        employeeSkillCertificateRepository.saveAndFlush(employeeSkillCertificate);
-        Long employeeSkillId = employeeSkillCertificate.getEmployeeSkill().getId();
-
-        // Get all the employeeSkillCertificateList where employeeSkill equals to employeeSkillId
-        defaultEmployeeSkillCertificateShouldBeFound("employeeSkillId.equals=" + employeeSkillId);
-
-        // Get all the employeeSkillCertificateList where employeeSkill equals to employeeSkillId + 1
-        defaultEmployeeSkillCertificateShouldNotBeFound("employeeSkillId.equals=" + (employeeSkillId + 1));
     }
 
     /**

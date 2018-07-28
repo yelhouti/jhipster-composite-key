@@ -1,19 +1,17 @@
 import { IEmployeeSkillCertificate } from 'app/shared/model//employee-skill-certificate.model';
 
 export interface IEmployeeSkill {
-    id?: number;
+    employeeId?: string;
     name?: string;
     level?: number;
     employeeSkillCertificates?: IEmployeeSkillCertificate[];
-    employeeId?: string;
 }
 
 export class EmployeeSkill implements IEmployeeSkill {
     constructor(
-        public id?: number,
+        public employeeId?: string,
         public name?: string,
         public level?: number,
-        public employeeSkillCertificates?: IEmployeeSkillCertificate[],
-        public employeeId?: string
+        public employeeSkillCertificates?: IEmployeeSkillCertificate[]
     ) {}
 }

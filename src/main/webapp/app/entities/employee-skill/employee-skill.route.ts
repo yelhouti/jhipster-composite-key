@@ -17,9 +17,10 @@ export class EmployeeSkillResolve implements Resolve<IEmployeeSkill> {
     constructor(private service: EmployeeSkillService) {}
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-        const id = route.params['id'] ? route.params['id'] : null;
-        if (id) {
-            return this.service.find(id).pipe(map((employeeSkill: HttpResponse<EmployeeSkill>) => employeeSkill.body));
+        const employeeId = route.params['employeeId'] ? route.params['employeeId'] : null;
+        const name = route.params['name'] ? route.params['name'] : null;
+        if (employeeId && name) {
+            return this.service.find(employeeId, name).pipe(map((employeeSkill: HttpResponse<EmployeeSkill>) => employeeSkill.body));
         }
         return of(new EmployeeSkill());
     }
@@ -36,7 +37,7 @@ export const employeeSkillRoute: Routes = [
         canActivate: [UserRouteAccessService]
     },
     {
-        path: 'employee-skill/:id/view',
+        path: 'employee-skill/:employeeId/:name/view',
         component: EmployeeSkillDetailComponent,
         resolve: {
             employeeSkill: EmployeeSkillResolve
@@ -60,7 +61,7 @@ export const employeeSkillRoute: Routes = [
         canActivate: [UserRouteAccessService]
     },
     {
-        path: 'employee-skill/:id/edit',
+        path: 'employee-skill/:employeeId/:name/edit',
         component: EmployeeSkillUpdateComponent,
         resolve: {
             employeeSkill: EmployeeSkillResolve
@@ -75,7 +76,7 @@ export const employeeSkillRoute: Routes = [
 
 export const employeeSkillPopupRoute: Routes = [
     {
-        path: 'employee-skill/:id/delete',
+        path: 'employee-skill/:employeeId/:name/delete',
         component: EmployeeSkillDeletePopupComponent,
         resolve: {
             employeeSkill: EmployeeSkillResolve
