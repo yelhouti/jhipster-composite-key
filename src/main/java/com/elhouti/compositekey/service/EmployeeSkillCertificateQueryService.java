@@ -73,9 +73,6 @@ public class EmployeeSkillCertificateQueryService extends QueryService<EmployeeS
     private Specification<EmployeeSkillCertificate> createSpecification(EmployeeSkillCertificateCriteria criteria) {
         Specification<EmployeeSkillCertificate> specification = Specification.where(null);
         if (criteria != null) {
-            if (criteria.getId() != null) {
-                specification = specification.and(buildSpecification(criteria.getId(), EmployeeSkillCertificate_.id));
-            }
             if (criteria.getGrade() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getGrade(), EmployeeSkillCertificate_.grade));
             }
@@ -84,6 +81,12 @@ public class EmployeeSkillCertificateQueryService extends QueryService<EmployeeS
             }
             if (criteria.getCertificateTypeId() != null) {
                 specification = specification.and(buildReferringEntitySpecification(criteria.getCertificateTypeId(), EmployeeSkillCertificate_.certificateType, CertificateType_.id));
+            }
+            if (criteria.getEmployeeSkillEmployeeId() != null) {
+                specification = specification.and(buildReferringEntitySpecification(criteria.getEmployeeSkillEmployeeId(), EmployeeSkillCertificate_.id, EmployeeSkillCertificateId_.employeeSkillEmployeeId));
+            }
+            if (criteria.getEmployeeSkillName() != null) {
+                specification = specification.and(buildReferringEntitySpecification(criteria.getEmployeeSkillName(), EmployeeSkillCertificate_.id, EmployeeSkillCertificateId_.employeeSkillName));
             }
         }
         return specification;

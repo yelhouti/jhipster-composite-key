@@ -25,24 +25,41 @@ import io.github.jhipster.service.filter.LocalDateFilter;
 public class EmployeeSkillCertificateCriteria implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    private StringFilter employeeSkillEmployeeId;
 
-    private LongFilter id;
+    private StringFilter employeeSkillName;
+
+    private LongFilter certificateTypeId;
 
     private IntegerFilter grade;
 
     private LocalDateFilter date;
 
-    private LongFilter certificateTypeId;
-
     public EmployeeSkillCertificateCriteria() {
     }
 
-    public LongFilter getId() {
-        return id;
+    public StringFilter getEmployeeSkillEmployeeId() {
+        return employeeSkillEmployeeId;
     }
 
-    public void setId(LongFilter id) {
-        this.id = id;
+    public void setEmployeeSkillEmployeeId(StringFilter employeeSkillEmployeeId) {
+        this.employeeSkillEmployeeId = employeeSkillEmployeeId;
+    }
+
+    public StringFilter getEmployeeSkillName() {
+        return employeeSkillName;
+    }
+
+    public void setEmployeeSkillName(StringFilter employeeSkillName) {
+        this.employeeSkillName = employeeSkillName;
+    }
+
+    public LongFilter getCertificateTypeId() {
+        return certificateTypeId;
+    }
+
+    public void setCertificateTypeId(LongFilter certificateTypeId) {
+        this.certificateTypeId = certificateTypeId;
     }
 
     public IntegerFilter getGrade() {
@@ -61,21 +78,14 @@ public class EmployeeSkillCertificateCriteria implements Serializable {
         this.date = date;
     }
 
-    public LongFilter getCertificateTypeId() {
-        return certificateTypeId;
-    }
-
-    public void setCertificateTypeId(LongFilter certificateTypeId) {
-        this.certificateTypeId = certificateTypeId;
-    }
-
     @Override
     public String toString() {
         return "EmployeeSkillCertificateCriteria{" +
-                (id != null ? "id=" + id + ", " : "") +
+                (employeeSkillEmployeeId != null ? "employeeSkillEmployeeId=" + employeeSkillEmployeeId + ", " : "") +
+                (employeeSkillName != null ? "employeeSkillName=" + employeeSkillName + ", " : "") +
+                (certificateTypeId != null ? "certificateTypeId=" + certificateTypeId + ", " : "") +
                 (grade != null ? "grade=" + grade + ", " : "") +
                 (date != null ? "date=" + date + ", " : "") +
-                (certificateTypeId != null ? "certificateTypeId=" + certificateTypeId + ", " : "") +
             "}";
     }
 

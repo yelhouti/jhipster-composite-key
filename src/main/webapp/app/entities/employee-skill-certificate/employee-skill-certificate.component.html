@@ -14,45 +14,44 @@
         <table class="table table-striped">
             <thead>
             <tr>
-            <th><span>ID</span></th>
+            <th><span>Employee</span></th>
+            <th><span>Skill</span></th>
+            <th><span>Certificate Type</span></th>
             <th><span>Grade</span></th>
             <th><span>Date</span></th>
-            <th><span>Certificate Type</span></th>
-            <th><span>Employee Skill</span></th>
             <th></th>
             </tr>
             </thead>
             <tbody>
             <tr *ngFor="let employeeSkillCertificate of employeeSkillCertificates ;trackBy: trackId">
-                <td><a [routerLink]="['/employee-skill-certificate', employeeSkillCertificate.id, 'view' ]">{{employeeSkillCertificate.id}}</a></td>
-                <td>{{employeeSkillCertificate.grade}}</td>
-                <td>{{employeeSkillCertificate.date | date:'mediumDate'}}</td>
+                <td><a [routerLink]="['/employee', employeeSkillCertificate.employeeSkillEmployeeId, 'view' ]">{{employeeSkillCertificate.employeeSkillEmployeeId}}</a></td>
+                <td>{{employeeSkillCertificate.employeeSkillName}}</td>
                 <td>
                     <div *ngIf="employeeSkillCertificate.certificateTypeId">
                         <a [routerLink]="['../certificate-type', employeeSkillCertificate.certificateTypeId , 'view' ]" >{{employeeSkillCertificate.certificateTypeName}}</a>
                     </div>
                 </td>
-                <td>
-                    <div *ngIf="employeeSkillCertificate.employeeSkillId">
-                        <a [routerLink]="['../employee-skill', employeeSkillCertificate.employeeSkillId , 'view' ]" >{{employeeSkillCertificate.employeeSkillId}}</a>
-                    </div>
-                </td>
+                <td>{{employeeSkillCertificate.grade}}</td>
+                <td>{{employeeSkillCertificate.date | date:'mediumDate'}}</td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"
-                                [routerLink]="['/employee-skill-certificate', employeeSkillCertificate.id, 'view' ]"
+                                [routerLink]="['/employee-skill-certificate', employeeSkillCertificate.employeeSkillEmployeeId, employeeSkillCertificate.employeeSkillName,
+                                 employeeSkillCertificate.certificateTypeId, 'view' ]"
                                 class="btn btn-info btn-sm">
                             <fa-icon [icon]="'eye'"></fa-icon>
                             <span class="d-none d-md-inline">View</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/employee-skill-certificate', employeeSkillCertificate.id, 'edit']"
+                                [routerLink]="['/employee-skill-certificate', employeeSkillCertificate.employeeSkillEmployeeId, employeeSkillCertificate.employeeSkillName,
+                                 employeeSkillCertificate.certificateTypeId, 'edit']"
                                 class="btn btn-primary btn-sm">
                             <fa-icon [icon]="'pencil-alt'"></fa-icon>
                             <span class="d-none d-md-inline">Edit</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'employee-skill-certificate/'+ employeeSkillCertificate.id + '/delete'} }]"
+                                [routerLink]="['/', { outlets: { popup: 'employee-skill-certificate/'+ employeeSkillCertificate.employeeSkillEmployeeId + '/' +
+                                employeeSkillCertificate.employeeSkillName  + '/' + employeeSkillCertificate.certificateTypeId + '/delete'} }]"
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">

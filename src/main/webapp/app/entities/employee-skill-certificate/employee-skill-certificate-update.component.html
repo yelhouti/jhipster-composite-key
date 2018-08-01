@@ -4,10 +4,31 @@
             <h2 id="jhi-employee-skill-certificate-heading">Create or edit a Employee Skill Certificate</h2>
             <div>
                 <jhi-alert-error></jhi-alert-error>
-                <div class="form-group" [hidden]="!employeeSkillCertificate.id">
-                    <label for="id">ID</label>
-                    <input type="text" class="form-control" id="id" name="id"
-                        [(ngModel)]="employeeSkillCertificate.id" readonly />
+                <div class="form-group">
+                <label class="form-control-label" for="field_employee_skill">Employee Skill</label>
+                <select class="form-control" id="field_employee_skill" name="employeeSkill" (ngModelChange)="onEmployeeSkillChange($event)" [ngModel]="selectedEmployeeSkill" required [disabled]="this.edit">
+                    <option *ngIf="!editForm.value.employeeSkillEmployeeId" [ngValue]="null" selected></option>
+                    <option [ngValue]="employeeSkillOption" *ngFor="let employeeSkillOption of employeeSkills; trackBy: trackEmployeeSkillById">{{employeeSkillOption.employeeId + ' - ' + employeeSkillOption.name}}</option>
+                </select>
+                </div>
+                <div [hidden]="!(editForm.controls.employeeSkill?.dirty && editForm.controls.employeeSkill?.invalid)">
+                    <small class="form-text text-danger"
+                           [hidden]="!editForm.controls.employeeSkill?.errors?.required">
+                        This field is required.
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_certificateType">Certificate Type</label>
+                    <select class="form-control" id="field_certificateType" name="certificateType" [(ngModel)]="employeeSkillCertificate.certificateTypeId"  required [disabled]="this.edit">
+                        <option *ngIf="!editForm.value.certificateTypeId" [ngValue]="null" selected></option>
+                        <option [ngValue]="certificateTypeOption.id" *ngFor="let certificateTypeOption of certificateTypes; trackBy: trackCertificateTypeById">{{certificateTypeOption.name}}</option>
+                    </select>
+                </div>
+                <div [hidden]="!(editForm.controls.id?.dirty && editForm.controls.id?.invalid)">
+                    <small class="form-text text-danger"
+                           [hidden]="!editForm.controls.certificateType?.errors?.required">
+                        This field is required.
+                    </small>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_grade">Grade</label>
@@ -39,33 +60,6 @@
                         This field is required.
                         </small>
                     </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-control-label" for="field_certificateType">Certificate Type</label>
-                    <select class="form-control" id="field_certificateType" name="certificateType" [(ngModel)]="employeeSkillCertificate.certificateTypeId"  required>
-                        <option *ngIf="!editForm.value.certificateType" [ngValue]="null" selected></option>
-                        <option [ngValue]="certificateTypeOption.id" *ngFor="let certificateTypeOption of certificatetypes; trackBy: trackCertificateTypeById">{{certificateTypeOption.name}}</option>
-                    </select>
-                </div>
-                <div [hidden]="!(editForm.controls.certificateType?.dirty && editForm.controls.certificateType?.invalid)">
-                    <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.certificateType?.errors?.required">
-                        This field is required.
-                    </small>
-                </div>
-                <div class="form-group">
-                    <label class="form-control-label" for="field_employeeSkill">Employee Skill</label>
-                    <select class="form-control" id="field_employeeSkill" name="employeeSkill" [(ngModel)]="employeeSkillCertificate.employeeSkillId"  required>
-                        <option *ngIf="!editForm.value.employeeSkill" [ngValue]="null" selected></option>
-                        <option [ngValue]="employeeSkillOption.id" *ngFor="let employeeSkillOption of employeeskills; trackBy: trackEmployeeSkillById">{{employeeSkillOption.id}}</option>
-                    </select>
-                </div>
-                <div [hidden]="!(editForm.controls.employeeSkill?.dirty && editForm.controls.employeeSkill?.invalid)">
-                    <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.employeeSkill?.errors?.required">
-                        This field is required.
-                    </small>
                 </div>
             </div>
             <div>

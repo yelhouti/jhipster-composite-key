@@ -1,17 +1,19 @@
 <div class="row justify-content-center">
     <div class="col-8">
         <div *ngIf="employeeSkillCertificate">
-            <h2><span>Employee Skill Certificate</span> {{employeeSkillCertificate.id}}</h2>
+            <h2><span>Employee Skill Certificate</span></h2>
             <hr>
             <jhi-alert-error></jhi-alert-error>
             <dl class="row-md jh-entity-details">
-                <dt><span>Grade</span></dt>
+                <dt><span>Employee Skill</span></dt>
                 <dd>
-                    <span>{{employeeSkillCertificate.grade}}</span>
+                    <div *ngIf="employeeSkillCertificate.employeeSkillEmployeeId">
+                        <a [routerLink]="['/employee', employeeSkillCertificate.employeeSkillEmployeeId, 'view']">{{employeeSkillCertificate.employeeSkillEmployeeId}}</a>
+                    </div>
                 </dd>
-                <dt><span>Date</span></dt>
+                <dt><span>Skill</span></dt>
                 <dd>
-                    <span>{{employeeSkillCertificate.date}}</span>
+                    <span>{{employeeSkillCertificate.employeeSkillName}}</span>
                 </dd>
                 <dt><span>Certificate Type</span></dt>
                 <dd>
@@ -19,11 +21,13 @@
                         <a [routerLink]="['/certificate-type', employeeSkillCertificate.certificateTypeId, 'view']">{{employeeSkillCertificate.certificateTypeName}}</a>
                     </div>
                 </dd>
-                <dt><span>Employee Skill</span></dt>
+                <dt><span>Grade</span></dt>
                 <dd>
-                    <div *ngIf="employeeSkillCertificate.employeeSkillId">
-                        <a [routerLink]="['/employee-skill', employeeSkillCertificate.employeeSkillId, 'view']">{{employeeSkillCertificate.employeeSkillId}}</a>
-                    </div>
+                    <span>{{employeeSkillCertificate.grade}}</span>
+                </dd>
+                <dt><span>Date</span></dt>
+                <dd>
+                    <span>{{employeeSkillCertificate.date}}</span>
                 </dd>
             </dl>
 
@@ -34,7 +38,8 @@
             </button>
 
             <button type="button"
-                    [routerLink]="['/employee-skill-certificate', employeeSkillCertificate.id, 'edit']"
+                    [routerLink]="['/employee-skill-certificate', employeeSkillCertificate.employeeSkillEmployeeId,
+                     employeeSkillCertificate.employeeSkillName, employeeSkillCertificate.certificateTypeId, 'edit']"
                     class="btn btn-primary">
                 <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
             </button>

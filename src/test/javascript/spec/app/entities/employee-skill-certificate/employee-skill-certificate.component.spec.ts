@@ -13,6 +13,9 @@ describe('Component Tests', () => {
         let comp: EmployeeSkillCertificateComponent;
         let fixture: ComponentFixture<EmployeeSkillCertificateComponent>;
         let service: EmployeeSkillCertificateService;
+        const DEFAULT_EMPLOYEE_SKILL_EMPLOYEE_ID = 'AAAAAAAAAAA';
+        const DEFAULT_EMPLOYEE_SKILL_NAME = 'AAAAAAAAAAA';
+        const DEFAULT_CERTIFICATE_TYPE_ID = 1;
 
         beforeEach(() => {
             TestBed.configureTestingModule({
@@ -34,7 +37,13 @@ describe('Component Tests', () => {
             spyOn(service, 'query').and.returnValue(
                 of(
                     new HttpResponse({
-                        body: [new EmployeeSkillCertificate(123)],
+                        body: [
+                            new EmployeeSkillCertificate(
+                                DEFAULT_EMPLOYEE_SKILL_EMPLOYEE_ID,
+                                DEFAULT_EMPLOYEE_SKILL_NAME,
+                                DEFAULT_CERTIFICATE_TYPE_ID
+                            )
+                        ],
                         headers
                     })
                 )
@@ -45,7 +54,13 @@ describe('Component Tests', () => {
 
             // THEN
             expect(service.query).toHaveBeenCalled();
-            expect(comp.employeeSkillCertificates[0]).toEqual(jasmine.objectContaining({ id: 123 }));
+            expect(comp.employeeSkillCertificates[0]).toEqual(
+                jasmine.objectContaining({
+                    employeeSkillEmployeeId: DEFAULT_EMPLOYEE_SKILL_EMPLOYEE_ID,
+                    employeeSkillName: DEFAULT_EMPLOYEE_SKILL_NAME,
+                    certificateTypeId: DEFAULT_CERTIFICATE_TYPE_ID
+                })
+            );
         });
     });
 });

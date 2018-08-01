@@ -15,6 +15,9 @@ describe('Component Tests', () => {
         let service: EmployeeSkillCertificateService;
         let mockEventManager: any;
         let mockActiveModal: any;
+        const DEFAULT_EMPLOYEE_SKILL_EMPLOYEE_ID = 'AAAAAAAAAAA';
+        const DEFAULT_EMPLOYEE_SKILL_NAME = 'AAAAAAAAAAA';
+        const DEFAULT_CERTIFICATE_TYPE_ID = 1;
 
         beforeEach(() => {
             TestBed.configureTestingModule({
@@ -31,22 +34,29 @@ describe('Component Tests', () => {
         });
 
         describe('confirmDelete', () => {
-            it('Should call delete service on confirmDelete', inject(
-                [],
-                fakeAsync(() => {
-                    // GIVEN
-                    spyOn(service, 'delete').and.returnValue(of({}));
+            it(
+                'Should call delete service on confirmDelete',
+                inject(
+                    [],
+                    fakeAsync(() => {
+                        // GIVEN
+                        spyOn(service, 'delete').and.returnValue(of({}));
 
-                    // WHEN
-                    comp.confirmDelete(123);
-                    tick();
+                        // WHEN
+                        comp.confirmDelete(DEFAULT_EMPLOYEE_SKILL_EMPLOYEE_ID, DEFAULT_EMPLOYEE_SKILL_NAME, DEFAULT_CERTIFICATE_TYPE_ID);
+                        tick();
 
-                    // THEN
-                    expect(service.delete).toHaveBeenCalledWith(123);
-                    expect(mockActiveModal.dismissSpy).toHaveBeenCalled();
-                    expect(mockEventManager.broadcastSpy).toHaveBeenCalled();
-                })
-            ));
+                        // THEN
+                        expect(service.delete).toHaveBeenCalledWith(
+                            DEFAULT_EMPLOYEE_SKILL_EMPLOYEE_ID,
+                            DEFAULT_EMPLOYEE_SKILL_NAME,
+                            DEFAULT_CERTIFICATE_TYPE_ID
+                        );
+                        expect(mockActiveModal.dismissSpy).toHaveBeenCalled();
+                        expect(mockEventManager.broadcastSpy).toHaveBeenCalled();
+                    })
+                )
+            );
         });
     });
 });

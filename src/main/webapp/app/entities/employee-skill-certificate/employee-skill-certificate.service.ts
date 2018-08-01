@@ -32,9 +32,14 @@ export class EmployeeSkillCertificateService {
             .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
     }
 
-    find(id: number): Observable<EntityResponseType> {
+    find(employeeSkillEmployeeId: string, employeeSkillName: string, certificateTypeId: number): Observable<EntityResponseType> {
         return this.http
-            .get<IEmployeeSkillCertificate>(`${this.resourceUrl}/${id}`, { observe: 'response' })
+            .get<IEmployeeSkillCertificate>(
+                `${
+                    this.resourceUrl
+                }/employeeSkillEmployeeId=${employeeSkillEmployeeId};employeeSkillName=${employeeSkillName};certificateTypeId=${certificateTypeId}`,
+                { observe: 'response' }
+            )
             .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
     }
 
@@ -45,8 +50,13 @@ export class EmployeeSkillCertificateService {
             .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
     }
 
-    delete(id: number): Observable<HttpResponse<any>> {
-        return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
+    delete(employeeSkillEmployeeId: string, employeeSkillName: string, certificateTypeId: number): Observable<HttpResponse<any>> {
+        return this.http.delete<any>(
+            `${
+                this.resourceUrl
+            }/employeeSkillEmployeeId=${employeeSkillEmployeeId};employeeSkillName=${employeeSkillName};certificateTypeId=${certificateTypeId}`,
+            { observe: 'response' }
+        );
     }
 
     private convertDateFromClient(employeeSkillCertificate: IEmployeeSkillCertificate): IEmployeeSkillCertificate {

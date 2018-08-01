@@ -2,10 +2,7 @@ package com.elhouti.compositekey.web.rest;
 
 import com.elhouti.compositekey.CompositekeyApp;
 
-import com.elhouti.compositekey.domain.EmployeeSkillCertificate;
-import com.elhouti.compositekey.domain.CertificateType;
-import com.elhouti.compositekey.domain.EmployeeSkill;
-import com.elhouti.compositekey.domain.EmployeeSkillId;
+import com.elhouti.compositekey.domain.*;
 import com.elhouti.compositekey.repository.EmployeeSkillCertificateRepository;
 import com.elhouti.compositekey.service.EmployeeSkillCertificateService;
 import com.elhouti.compositekey.service.dto.EmployeeSkillCertificateDTO;
@@ -49,7 +46,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = CompositekeyApp.class)
 public class EmployeeSkillCertificateResourceIntTest {
 
-    private static final EmployeeSkillId DEFAULT_EMPLOYEE_SKILL_ID = new EmployeeSkillId("BBBBBBBBB", "BBBBBBBBB");
+    private static final EmployeeSkillId DEFAULT_EMPLOYEE_SKILL_ID = new EmployeeSkillId("AAAAAAAAA", "AAAAAAAAA");
+    private static final EmployeeSkillId OTHER_EMPLOYEE_SKILL_ID = new EmployeeSkillId("BBBBBBBBB", "BBBBBBBBB");
+
+    private static final EmployeeSkillCertificateId DEFAULT_EMPLOYEE_SKILL_CERTIFICATE_ID =
+        new EmployeeSkillCertificateId(DEFAULT_EMPLOYEE_SKILL_ID.getEmployeeId(), DEFAULT_EMPLOYEE_SKILL_ID.getName(),
+            1L);
+    private static final EmployeeSkillCertificateId OTHER_EMPLOYEE_SKILL_CERTIFICATE_ID =
+        new EmployeeSkillCertificateId(OTHER_EMPLOYEE_SKILL_ID.getEmployeeId(), OTHER_EMPLOYEE_SKILL_ID.getName(),
+            2L);
 
     private static final Integer DEFAULT_GRADE = 1;
     private static final Integer UPDATED_GRADE = 2;
@@ -92,6 +97,7 @@ public class EmployeeSkillCertificateResourceIntTest {
         MockitoAnnotations.initMocks(this);
         final EmployeeSkillCertificateResource employeeSkillCertificateResource = new EmployeeSkillCertificateResource(employeeSkillCertificateService, employeeSkillCertificateQueryService);
         this.restEmployeeSkillCertificateMockMvc = MockMvcBuilders.standaloneSetup(employeeSkillCertificateResource)
+            .setRemoveSemicolonContent(false)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
             .setConversionService(createFormattingConversionService())
@@ -118,6 +124,8 @@ public class EmployeeSkillCertificateResourceIntTest {
         em.persist(employeeSkill);
         em.flush();
         employeeSkillCertificate.setEmployeeSkill(employeeSkill);
+        employeeSkillCertificate.setId(new EmployeeSkillCertificateId(employeeSkill.getId().getEmployeeId(),
+            employeeSkill.getId().getName(),certificateType.getId()));
         return employeeSkillCertificate;
     }
 
@@ -130,7 +138,6 @@ public class EmployeeSkillCertificateResourceIntTest {
     @Transactional
     public void createEmployeeSkillCertificate() throws Exception {
         int databaseSizeBeforeCreate = employeeSkillCertificateRepository.findAll().size();
-
         // Create the EmployeeSkillCertificate
         EmployeeSkillCertificateDTO employeeSkillCertificateDTO = employeeSkillCertificateMapper.toDto(employeeSkillCertificate);
         restEmployeeSkillCertificateMockMvc.perform(post("/api/employee-skill-certificates")
@@ -149,17 +156,17 @@ public class EmployeeSkillCertificateResourceIntTest {
     @Test
     @Transactional
     public void createEmployeeSkillCertificateWithExistingId() throws Exception {
+        employeeSkillCertificateRepository.saveAndFlush(employeeSkillCertificate);
         int databaseSizeBeforeCreate = employeeSkillCertificateRepository.findAll().size();
 
         // Create the EmployeeSkillCertificate with an existing ID
-        employeeSkillCertificate.setId(1L);
         EmployeeSkillCertificateDTO employeeSkillCertificateDTO = employeeSkillCertificateMapper.toDto(employeeSkillCertificate);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restEmployeeSkillCertificateMockMvc.perform(post("/api/employee-skill-certificates")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(employeeSkillCertificateDTO)))
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isConflict());
 
         // Validate the EmployeeSkillCertificate in the database
         List<EmployeeSkillCertificate> employeeSkillCertificateList = employeeSkillCertificateRepository.findAll();
@@ -214,7 +221,12 @@ public class EmployeeSkillCertificateResourceIntTest {
         restEmployeeSkillCertificateMockMvc.perform(get("/api/employee-skill-certificates?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(employeeSkillCertificate.getId().intValue())))
+            .andExpect(jsonPath("$.[*].employeeSkillEmployeeId").value(hasItem(employeeSkillCertificate.getId()
+                .getEmployeeSkillEmployeeId())))
+            .andExpect(jsonPath("$.[*].employeeSkillName").value(hasItem(employeeSkillCertificate.getId()
+                .getEmployeeSkillName())))
+            .andExpect(jsonPath("$.[*].certificateTypeId").value(hasItem(employeeSkillCertificate.getId()
+                .getCertificateTypeId().intValue())))
             .andExpect(jsonPath("$.[*].grade").value(hasItem(DEFAULT_GRADE)))
             .andExpect(jsonPath("$.[*].date").value(hasItem(DEFAULT_DATE.toString())));
     }
@@ -227,10 +239,15 @@ public class EmployeeSkillCertificateResourceIntTest {
         employeeSkillCertificateRepository.saveAndFlush(employeeSkillCertificate);
 
         // Get the employeeSkillCertificate
-        restEmployeeSkillCertificateMockMvc.perform(get("/api/employee-skill-certificates/{id}", employeeSkillCertificate.getId()))
+        restEmployeeSkillCertificateMockMvc.perform(get("/api/employee-skill-certificates/{id}", employeeSkillCertificate.getId().toMatrixVariableString()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.id").value(employeeSkillCertificate.getId().intValue()))
+            .andExpect(jsonPath("$.employeeSkillEmployeeId").value(employeeSkillCertificate.getId()
+                .getEmployeeSkillEmployeeId()))
+            .andExpect(jsonPath("$.employeeSkillName").value(employeeSkillCertificate.getId()
+                .getEmployeeSkillName()))
+            .andExpect(jsonPath("$.certificateTypeId").value(employeeSkillCertificate.getId()
+                .getCertificateTypeId().intValue()))
             .andExpect(jsonPath("$.grade").value(DEFAULT_GRADE))
             .andExpect(jsonPath("$.date").value(DEFAULT_DATE.toString()));
     }
@@ -371,18 +388,14 @@ public class EmployeeSkillCertificateResourceIntTest {
     @Transactional
     public void getAllEmployeeSkillCertificatesByCertificateTypeIsEqualToSomething() throws Exception {
         // Initialize the database
-        CertificateType certificateType = CertificateTypeResourceIntTest.createEntity(em);
-        em.persist(certificateType);
-        em.flush();
-        employeeSkillCertificate.setCertificateType(certificateType);
         employeeSkillCertificateRepository.saveAndFlush(employeeSkillCertificate);
-        Long certificateTypeId = certificateType.getId();
+        Long certificateTypeId = employeeSkillCertificate.getCertificateType().getId();
 
         // Get all the employeeSkillCertificateList where certificateType equals to certificateTypeId
         defaultEmployeeSkillCertificateShouldBeFound("certificateTypeId.equals=" + certificateTypeId);
 
         // Get all the employeeSkillCertificateList where certificateType equals to certificateTypeId + 1
-        defaultEmployeeSkillCertificateShouldNotBeFound("certificateTypeId.equals=" + (certificateTypeId + 1));
+        defaultEmployeeSkillCertificateShouldNotBeFound("certificateTypeId.equals=" + (certificateTypeId + 1L));
     }
 
     /**
@@ -392,9 +405,14 @@ public class EmployeeSkillCertificateResourceIntTest {
         restEmployeeSkillCertificateMockMvc.perform(get("/api/employee-skill-certificates?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(employeeSkillCertificate.getId().intValue())))
-            .andExpect(jsonPath("$.[*].grade").value(hasItem(DEFAULT_GRADE)))
-            .andExpect(jsonPath("$.[*].date").value(hasItem(DEFAULT_DATE.toString())));
+            .andExpect(jsonPath("$.[*].employeeSkillEmployeeId").value(hasItem(employeeSkillCertificate.getId()
+                .getEmployeeSkillEmployeeId())))
+            .andExpect(jsonPath("$.[*].employeeSkillName").value(hasItem(employeeSkillCertificate.getId()
+                .getEmployeeSkillName())))
+            .andExpect(jsonPath("$.[*].certificateTypeId").value(hasItem(employeeSkillCertificate.getId()
+                .getCertificateTypeId().intValue())))
+            .andExpect(jsonPath("$.[*].grade").value(hasItem(employeeSkillCertificate.getGrade())))
+            .andExpect(jsonPath("$.[*].date").value(hasItem(employeeSkillCertificate.getDate().toString())));
     }
 
     /**
@@ -474,7 +492,7 @@ public class EmployeeSkillCertificateResourceIntTest {
         int databaseSizeBeforeDelete = employeeSkillCertificateRepository.findAll().size();
 
         // Get the employeeSkillCertificate
-        restEmployeeSkillCertificateMockMvc.perform(delete("/api/employee-skill-certificates/{id}", employeeSkillCertificate.getId())
+        restEmployeeSkillCertificateMockMvc.perform(delete("/api/employee-skill-certificates/{id}", employeeSkillCertificate.getId().toMatrixVariableString())
             .accept(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk());
 
@@ -488,11 +506,11 @@ public class EmployeeSkillCertificateResourceIntTest {
     public void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(EmployeeSkillCertificate.class);
         EmployeeSkillCertificate employeeSkillCertificate1 = new EmployeeSkillCertificate();
-        employeeSkillCertificate1.setId(1L);
+        employeeSkillCertificate1.setId(DEFAULT_EMPLOYEE_SKILL_CERTIFICATE_ID);
         EmployeeSkillCertificate employeeSkillCertificate2 = new EmployeeSkillCertificate();
         employeeSkillCertificate2.setId(employeeSkillCertificate1.getId());
         assertThat(employeeSkillCertificate1).isEqualTo(employeeSkillCertificate2);
-        employeeSkillCertificate2.setId(2L);
+        employeeSkillCertificate2.setId(OTHER_EMPLOYEE_SKILL_CERTIFICATE_ID);
         assertThat(employeeSkillCertificate1).isNotEqualTo(employeeSkillCertificate2);
         employeeSkillCertificate1.setId(null);
         assertThat(employeeSkillCertificate1).isNotEqualTo(employeeSkillCertificate2);
@@ -503,21 +521,39 @@ public class EmployeeSkillCertificateResourceIntTest {
     public void dtoEqualsVerifier() throws Exception {
         TestUtil.equalsVerifier(EmployeeSkillCertificateDTO.class);
         EmployeeSkillCertificateDTO employeeSkillCertificateDTO1 = new EmployeeSkillCertificateDTO();
-        employeeSkillCertificateDTO1.setId(1L);
+        employeeSkillCertificateDTO1.setEmployeeSkillEmployeeId(DEFAULT_EMPLOYEE_SKILL_CERTIFICATE_ID.getEmployeeSkillEmployeeId());
+        employeeSkillCertificateDTO1.setEmployeeSkillName(DEFAULT_EMPLOYEE_SKILL_CERTIFICATE_ID.getEmployeeSkillName());
+        employeeSkillCertificateDTO1.setCertificateTypeId(DEFAULT_EMPLOYEE_SKILL_CERTIFICATE_ID.getCertificateTypeId());
         EmployeeSkillCertificateDTO employeeSkillCertificateDTO2 = new EmployeeSkillCertificateDTO();
+        employeeSkillCertificateDTO2.setEmployeeSkillEmployeeId(OTHER_EMPLOYEE_SKILL_CERTIFICATE_ID.getEmployeeSkillEmployeeId());
+        employeeSkillCertificateDTO2.setEmployeeSkillName(OTHER_EMPLOYEE_SKILL_CERTIFICATE_ID.getEmployeeSkillName());
+        employeeSkillCertificateDTO2.setCertificateTypeId(OTHER_EMPLOYEE_SKILL_CERTIFICATE_ID.getCertificateTypeId());
         assertThat(employeeSkillCertificateDTO1).isNotEqualTo(employeeSkillCertificateDTO2);
-        employeeSkillCertificateDTO2.setId(employeeSkillCertificateDTO1.getId());
+        employeeSkillCertificateDTO2.setEmployeeSkillEmployeeId(employeeSkillCertificateDTO1.getEmployeeSkillEmployeeId());
+        employeeSkillCertificateDTO2.setEmployeeSkillName(employeeSkillCertificateDTO1.getEmployeeSkillName());
+        employeeSkillCertificateDTO2.setCertificateTypeId(employeeSkillCertificateDTO1.getCertificateTypeId());
         assertThat(employeeSkillCertificateDTO1).isEqualTo(employeeSkillCertificateDTO2);
-        employeeSkillCertificateDTO2.setId(2L);
+        employeeSkillCertificateDTO2.setEmployeeSkillEmployeeId(OTHER_EMPLOYEE_SKILL_CERTIFICATE_ID.getEmployeeSkillEmployeeId());
         assertThat(employeeSkillCertificateDTO1).isNotEqualTo(employeeSkillCertificateDTO2);
-        employeeSkillCertificateDTO1.setId(null);
+        employeeSkillCertificateDTO2.setEmployeeSkillEmployeeId(employeeSkillCertificateDTO1.getEmployeeSkillEmployeeId());
+        employeeSkillCertificateDTO2.setEmployeeSkillName(OTHER_EMPLOYEE_SKILL_CERTIFICATE_ID.getEmployeeSkillName());
+        assertThat(employeeSkillCertificateDTO1).isNotEqualTo(employeeSkillCertificateDTO2);
+        employeeSkillCertificateDTO2.setEmployeeSkillName(employeeSkillCertificateDTO1.getEmployeeSkillName());
+        employeeSkillCertificateDTO2.setCertificateTypeId(OTHER_EMPLOYEE_SKILL_CERTIFICATE_ID.getCertificateTypeId());
+        assertThat(employeeSkillCertificateDTO1).isNotEqualTo(employeeSkillCertificateDTO2);
+        employeeSkillCertificateDTO1.setCertificateTypeId(null);
+        assertThat(employeeSkillCertificateDTO1).isNotEqualTo(employeeSkillCertificateDTO2);
+        employeeSkillCertificateDTO1.setCertificateTypeId(employeeSkillCertificateDTO2.getCertificateTypeId());
+        employeeSkillCertificateDTO1.setEmployeeSkillEmployeeId(null);
+        assertThat(employeeSkillCertificateDTO1).isNotEqualTo(employeeSkillCertificateDTO2);
+        employeeSkillCertificateDTO1.setEmployeeSkillName(null);
         assertThat(employeeSkillCertificateDTO1).isNotEqualTo(employeeSkillCertificateDTO2);
     }
 
     @Test
     @Transactional
     public void testEntityFromId() {
-        assertThat(employeeSkillCertificateMapper.fromId(42L).getId()).isEqualTo(42);
+        assertThat(employeeSkillCertificateMapper.fromId(DEFAULT_EMPLOYEE_SKILL_CERTIFICATE_ID).getId()).isEqualTo(DEFAULT_EMPLOYEE_SKILL_CERTIFICATE_ID);
         assertThat(employeeSkillCertificateMapper.fromId(null)).isNull();
     }
 }

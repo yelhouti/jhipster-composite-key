@@ -13,6 +13,9 @@ describe('Component Tests', () => {
         let comp: EmployeeSkillCertificateUpdateComponent;
         let fixture: ComponentFixture<EmployeeSkillCertificateUpdateComponent>;
         let service: EmployeeSkillCertificateService;
+        const DEFAULT_EMPLOYEE_SKILL_EMPLOYEE_ID = 'AAAAAAAAAAA';
+        const DEFAULT_EMPLOYEE_SKILL_NAME = 'AAAAAAAAAAA';
+        const DEFAULT_CERTIFICATE_TYPE_ID = 1;
 
         beforeEach(() => {
             TestBed.configureTestingModule({
@@ -32,10 +35,15 @@ describe('Component Tests', () => {
                 'Should call update service on save for existing entity',
                 fakeAsync(() => {
                     // GIVEN
-                    const entity = new EmployeeSkillCertificate(123);
+                    const entity = new EmployeeSkillCertificate(
+                        DEFAULT_EMPLOYEE_SKILL_EMPLOYEE_ID,
+                        DEFAULT_EMPLOYEE_SKILL_NAME,
+                        DEFAULT_CERTIFICATE_TYPE_ID
+                    );
                     spyOn(service, 'update').and.returnValue(of(new HttpResponse({ body: entity })));
                     comp.employeeSkillCertificate = entity;
                     // WHEN
+                    comp.edit = true;
                     comp.save();
                     tick(); // simulate async
 

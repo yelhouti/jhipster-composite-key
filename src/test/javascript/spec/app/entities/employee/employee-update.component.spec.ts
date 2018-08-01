@@ -37,6 +37,7 @@ describe('Component Tests', () => {
                     spyOn(service, 'update').and.returnValue(of(new HttpResponse({ body: entity })));
                     comp.employee = entity;
                     // WHEN
+                    comp.edit = true;
                     comp.save();
                     tick(); // simulate async
 

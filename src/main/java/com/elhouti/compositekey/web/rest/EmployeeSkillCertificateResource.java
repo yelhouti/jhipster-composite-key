@@ -4,10 +4,14 @@ import com.codahale.metrics.annotation.Timed;
 import com.elhouti.compositekey.service.EmployeeSkillCertificateService;
 import com.elhouti.compositekey.web.rest.errors.BadRequestAlertException;
 import com.elhouti.compositekey.web.rest.util.HeaderUtil;
+import com.elhouti.compositekey.domain.EmployeeSkillCertificateId;
 import com.elhouti.compositekey.service.dto.EmployeeSkillCertificateDTO;
 import com.elhouti.compositekey.service.dto.EmployeeSkillCertificateCriteria;
 import com.elhouti.compositekey.service.EmployeeSkillCertificateQueryService;
 import io.github.jhipster.web.util.ResponseUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.zalando.problem.Problem;
+import org.zalando.problem.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +22,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -51,12 +56,19 @@ public class EmployeeSkillCertificateResource {
     @Timed
     public ResponseEntity<EmployeeSkillCertificateDTO> createEmployeeSkillCertificate(@Valid @RequestBody EmployeeSkillCertificateDTO employeeSkillCertificateDTO) throws URISyntaxException {
         log.debug("REST request to save EmployeeSkillCertificate : {}", employeeSkillCertificateDTO);
-        if (employeeSkillCertificateDTO.getId() != null) {
-            throw new BadRequestAlertException("A new employeeSkillCertificate cannot already have an ID", ENTITY_NAME, "idexists");
+        if(employeeSkillCertificateService.findOne(new EmployeeSkillCertificateId(employeeSkillCertificateDTO.getEmployeeSkillEmployeeId(),
+            employeeSkillCertificateDTO.getEmployeeSkillName(), employeeSkillCertificateDTO.getCertificateTypeId())).isPresent()){
+            throw Problem.builder()
+                .withTitle(ENTITY_NAME+" creation failed")
+                .withDetail("Conflict")
+                .withStatus(Status.CONFLICT)
+                .build();
         }
         EmployeeSkillCertificateDTO result = employeeSkillCertificateService.save(employeeSkillCertificateDTO);
-        return ResponseEntity.created(new URI("/api/employee-skill-certificates/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
+        return ResponseEntity.created(new URI("/api/employee-skill-certificates/" + "/"+ result.getEmployeeSkillEmployeeId() +"/"+
+            result.getEmployeeSkillName() +"/"+ result.getCertificateTypeId()))
+            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, "/"+ result.getEmployeeSkillEmployeeId() +"/"+
+                result.getEmployeeSkillName() +"/"+ result.getCertificateTypeId()))
             .body(result);
     }
 
@@ -73,12 +85,14 @@ public class EmployeeSkillCertificateResource {
     @Timed
     public ResponseEntity<EmployeeSkillCertificateDTO> updateEmployeeSkillCertificate(@Valid @RequestBody EmployeeSkillCertificateDTO employeeSkillCertificateDTO) throws URISyntaxException {
         log.debug("REST request to update EmployeeSkillCertificate : {}", employeeSkillCertificateDTO);
-        if (employeeSkillCertificateDTO.getId() == null) {
+        if(!employeeSkillCertificateService.findOne(new EmployeeSkillCertificateId(employeeSkillCertificateDTO.getEmployeeSkillEmployeeId(),
+            employeeSkillCertificateDTO.getEmployeeSkillName(), employeeSkillCertificateDTO.getCertificateTypeId())).isPresent()){
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         EmployeeSkillCertificateDTO result = employeeSkillCertificateService.save(employeeSkillCertificateDTO);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, employeeSkillCertificateDTO.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, "/"+ result.getEmployeeSkillEmployeeId() +"/"+
+                result.getEmployeeSkillName() +"/"+ result.getCertificateTypeId()))
             .body(result);
     }
 
@@ -104,9 +118,11 @@ public class EmployeeSkillCertificateResource {
      */
     @GetMapping("/employee-skill-certificates/{id}")
     @Timed
-    public ResponseEntity<EmployeeSkillCertificateDTO> getEmployeeSkillCertificate(@PathVariable Long id) {
-        log.debug("REST request to get EmployeeSkillCertificate : {}", id);
-        Optional<EmployeeSkillCertificateDTO> employeeSkillCertificateDTO = employeeSkillCertificateService.findOne(id);
+    public ResponseEntity<EmployeeSkillCertificateDTO> getEmployeeSkillCertificate(@MatrixVariable(pathVar = "id") Map<String, String> id) {
+        final ObjectMapper mapper = new ObjectMapper(); // jackson's objectmapper
+        final EmployeeSkillCertificateId employeeSkillCertificateId = mapper.convertValue(id, EmployeeSkillCertificateId.class);
+        log.debug("REST request to get employeeSkillCertificate : {}", id);
+        Optional<EmployeeSkillCertificateDTO> employeeSkillCertificateDTO = employeeSkillCertificateService.findOne(employeeSkillCertificateId);
         return ResponseUtil.wrapOrNotFound(employeeSkillCertificateDTO);
     }
 
@@ -118,9 +134,11 @@ public class EmployeeSkillCertificateResource {
      */
     @DeleteMapping("/employee-skill-certificates/{id}")
     @Timed
-    public ResponseEntity<Void> deleteEmployeeSkillCertificate(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteEmployeeSkillCertificate(@MatrixVariable(pathVar = "id") Map<String, String> id) {
+        final ObjectMapper mapper = new ObjectMapper(); // jackson's objectmapper
+        final EmployeeSkillCertificateId employeeSkillCertificateId = mapper.convertValue(id, EmployeeSkillCertificateId.class);
         log.debug("REST request to delete EmployeeSkillCertificate : {}", id);
-        employeeSkillCertificateService.delete(id);
+        employeeSkillCertificateService.delete(employeeSkillCertificateId);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 }
