@@ -70,7 +70,7 @@ public class EmployeeServiceImpl implements EmployeeService {
      */
     @Override
     @Transactional(readOnly = true)
-    public Optional<EmployeeDTO> findOne(Long id) {
+    public Optional<EmployeeDTO> findOne(String id) {
         log.debug("Request to get Employee : {}", id);
         return employeeRepository.findById(id)
             .map(employeeMapper::toDto);
@@ -82,7 +82,7 @@ public class EmployeeServiceImpl implements EmployeeService {
      * @param id the id of the entity
      */
     @Override
-    public void delete(Long id) {
+    public void delete(String id) {
         log.debug("Request to delete Employee : {}", id);
         employeeRepository.deleteById(id);
     }

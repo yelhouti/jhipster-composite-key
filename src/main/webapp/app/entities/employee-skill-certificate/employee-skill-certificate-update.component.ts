@@ -18,10 +18,11 @@ import { EmployeeSkillService } from 'app/entities/employee-skill';
 export class EmployeeSkillCertificateUpdateComponent implements OnInit {
     private _employeeSkillCertificate: IEmployeeSkillCertificate;
     isSaving: boolean;
+    edit: boolean;
+    certificateTypes: ICertificateType[];
 
-    certificatetypes: ICertificateType[];
-
-    employeeskills: IEmployeeSkill[];
+    employeeSkills: IEmployeeSkill[];
+    selectedEmployeeSkill: IEmployeeSkill;
     dateDp: any;
 
     constructor(
@@ -36,19 +37,40 @@ export class EmployeeSkillCertificateUpdateComponent implements OnInit {
         this.isSaving = false;
         this.activatedRoute.data.subscribe(({ employeeSkillCertificate }) => {
             this.employeeSkillCertificate = employeeSkillCertificate;
+            this.edit =
+                this.employeeSkillCertificate.employeeSkillEmployeeId !== undefined &&
+                this.employeeSkillCertificate.employeeSkillName !== undefined &&
+                this.employeeSkillCertificate.certificateTypeId !== undefined;
         });
         this.certificateTypeService.query().subscribe(
             (res: HttpResponse<ICertificateType[]>) => {
-                this.certificatetypes = res.body;
+                this.certificateTypes = res.body;
             },
             (res: HttpErrorResponse) => this.onError(res.message)
         );
         this.employeeSkillService.query().subscribe(
             (res: HttpResponse<IEmployeeSkill[]>) => {
-                this.employeeskills = res.body;
+                this.employeeSkills = res.body;
+                if (
+                    this.employeeSkillCertificate.employeeSkillEmployeeId !== undefined &&
+                    this.employeeSkillCertificate.employeeSkillName !== undefined
+                ) {
+                    console.log(this.employeeSkillCertificate, this.employeeSkills);
+                    this.selectedEmployeeSkill = this.employeeSkills.find(
+                        employeeSkill =>
+                            employeeSkill.employeeId === this.employeeSkillCertificate.employeeSkillEmployeeId &&
+                            employeeSkill.name === this.employeeSkillCertificate.employeeSkillName
+                    );
+                }
             },
             (res: HttpErrorResponse) => this.onError(res.message)
         );
+    }
+
+    onEmployeeSkillChange(event) {
+        this.selectedEmployeeSkill = event;
+        this.employeeSkillCertificate.employeeSkillEmployeeId = this.selectedEmployeeSkill.employeeId;
+        this.employeeSkillCertificate.employeeSkillName = this.selectedEmployeeSkill.name;
     }
 
     previousState() {
@@ -57,7 +79,7 @@ export class EmployeeSkillCertificateUpdateComponent implements OnInit {
 
     save() {
         this.isSaving = true;
-        if (this.employeeSkillCertificate.id !== undefined) {
+        if (this.edit) {
             this.subscribeToSaveResponse(this.employeeSkillCertificateService.update(this.employeeSkillCertificate));
         } else {
             this.subscribeToSaveResponse(this.employeeSkillCertificateService.create(this.employeeSkillCertificate));
@@ -89,7 +111,7 @@ export class EmployeeSkillCertificateUpdateComponent implements OnInit {
     }
 
     trackEmployeeSkillById(index: number, item: IEmployeeSkill) {
-        return item.id;
+        return item.employeeId + ',' + item.name;
     }
     get employeeSkillCertificate() {
         return this._employeeSkillCertificate;

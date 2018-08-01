@@ -8,8 +8,10 @@ import com.elhouti.compositekey.service.dto.EmployeeDTO;
 import com.elhouti.compositekey.service.dto.EmployeeCriteria;
 import com.elhouti.compositekey.service.EmployeeQueryService;
 import io.github.jhipster.web.util.ResponseUtil;
+import org.aspectj.weaver.ast.Not;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +19,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,12 +54,14 @@ public class EmployeeResource {
     @Timed
     public ResponseEntity<EmployeeDTO> createEmployee(@Valid @RequestBody EmployeeDTO employeeDTO) throws URISyntaxException {
         log.debug("REST request to save Employee : {}", employeeDTO);
-        if (employeeDTO.getId() != null) {
-            throw new BadRequestAlertException("A new employee cannot already have an ID", ENTITY_NAME, "idexists");
+        if (employeeService.findOne(employeeDTO.getId()).isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                .headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "conflict", "Conflict"))
+                .build();
         }
         EmployeeDTO result = employeeService.save(employeeDTO);
         return ResponseEntity.created(new URI("/api/employees/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
+            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId()))
             .body(result);
     }
 
@@ -73,12 +78,12 @@ public class EmployeeResource {
     @Timed
     public ResponseEntity<EmployeeDTO> updateEmployee(@Valid @RequestBody EmployeeDTO employeeDTO) throws URISyntaxException {
         log.debug("REST request to update Employee : {}", employeeDTO);
-        if (employeeDTO.getId() == null) {
+        if (!employeeService.findOne(employeeDTO.getId()).isPresent()) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         EmployeeDTO result = employeeService.save(employeeDTO);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, employeeDTO.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, employeeDTO.getId()))
             .body(result);
     }
 
@@ -104,7 +109,7 @@ public class EmployeeResource {
      */
     @GetMapping("/employees/{id}")
     @Timed
-    public ResponseEntity<EmployeeDTO> getEmployee(@PathVariable Long id) {
+    public ResponseEntity<EmployeeDTO> getEmployee(@PathVariable String id) {
         log.debug("REST request to get Employee : {}", id);
         Optional<EmployeeDTO> employeeDTO = employeeService.findOne(id);
         return ResponseUtil.wrapOrNotFound(employeeDTO);
@@ -118,9 +123,9 @@ public class EmployeeResource {
      */
     @DeleteMapping("/employees/{id}")
     @Timed
-    public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteEmployee(@PathVariable String id) {
         log.debug("REST request to delete Employee : {}", id);
         employeeService.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id)).build();
     }
 }

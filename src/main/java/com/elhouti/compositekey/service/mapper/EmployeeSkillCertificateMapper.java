@@ -4,23 +4,40 @@ import com.elhouti.compositekey.domain.*;
 import com.elhouti.compositekey.service.dto.EmployeeSkillCertificateDTO;
 
 import org.mapstruct.*;
+import org.mapstruct.factory.Mappers;
 
 /**
  * Mapper for the entity EmployeeSkillCertificate and its DTO EmployeeSkillCertificateDTO.
  */
 @Mapper(componentModel = "spring", uses = {CertificateTypeMapper.class, EmployeeSkillMapper.class})
-public interface EmployeeSkillCertificateMapper extends EntityMapper<EmployeeSkillCertificateDTO, EmployeeSkillCertificate> {
+public abstract class EmployeeSkillCertificateMapper implements EntityMapper<EmployeeSkillCertificateDTO, EmployeeSkillCertificate> {
 
-    @Mapping(source = "certificateType.id", target = "certificateTypeId")
+    EmployeeSkillMapper EMPLOYEE_SKILL_MAPPER = Mappers.getMapper(EmployeeSkillMapper.class);
+
+    @Mapping(source = "id.employeeSkillEmployeeId", target = "employeeSkillEmployeeId")
+    @Mapping(source = "id.employeeSkillName", target = "employeeSkillName")
+    @Mapping(source = "id.certificateTypeId", target = "certificateTypeId")
     @Mapping(source = "certificateType.name", target = "certificateTypeName")
-    @Mapping(source = "employeeSkill.id", target = "employeeSkillId")
-    EmployeeSkillCertificateDTO toDto(EmployeeSkillCertificate employeeSkillCertificate);
+    public abstract EmployeeSkillCertificateDTO toDto(EmployeeSkillCertificate employeeSkillCertificate);
 
+    @Mapping(source = "certificateTypeId", target = "id.certificateTypeId")
+    @Mapping(source = "employeeSkillEmployeeId", target = "id.employeeSkillEmployeeId")
+    @Mapping(source = "employeeSkillName", target = "id.employeeSkillName")
+    @Mapping(ignore = true, target = "employeeSkill")
     @Mapping(source = "certificateTypeId", target = "certificateType")
-    @Mapping(source = "employeeSkillId", target = "employeeSkill")
-    EmployeeSkillCertificate toEntity(EmployeeSkillCertificateDTO employeeSkillCertificateDTO);
+    public abstract EmployeeSkillCertificate toEntity(EmployeeSkillCertificateDTO employeeSkillCertificateDTO);
 
-    default EmployeeSkillCertificate fromId(Long id) {
+    @AfterMapping
+    protected void addEmployeeSkill(@MappingTarget EmployeeSkillCertificate employeeSkillCertificate, EmployeeSkillCertificateDTO employeeSkillCertificateDTO){
+        employeeSkillCertificate.setEmployeeSkill(
+            EMPLOYEE_SKILL_MAPPER.fromId(
+                new EmployeeSkillId(employeeSkillCertificateDTO.getEmployeeSkillEmployeeId(),
+                    employeeSkillCertificateDTO.getEmployeeSkillName())
+            )
+        );
+    }
+
+    public EmployeeSkillCertificate fromId(EmployeeSkillCertificateId id) {
         if (id == null) {
             return null;
         }

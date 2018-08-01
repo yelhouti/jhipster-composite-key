@@ -12,6 +12,7 @@ import { EmployeeService } from './employee.service';
 })
 export class EmployeeUpdateComponent implements OnInit {
     private _employee: IEmployee;
+    edit: boolean;
     isSaving: boolean;
 
     constructor(private employeeService: EmployeeService, private activatedRoute: ActivatedRoute) {}
@@ -20,6 +21,7 @@ export class EmployeeUpdateComponent implements OnInit {
         this.isSaving = false;
         this.activatedRoute.data.subscribe(({ employee }) => {
             this.employee = employee;
+            this.edit = this.employee.id !== undefined;
         });
     }
 
@@ -29,7 +31,7 @@ export class EmployeeUpdateComponent implements OnInit {
 
     save() {
         this.isSaving = true;
-        if (this.employee.id !== undefined) {
+        if (this.edit) {
             this.subscribeToSaveResponse(this.employeeService.update(this.employee));
         } else {
             this.subscribeToSaveResponse(this.employeeService.create(this.employee));

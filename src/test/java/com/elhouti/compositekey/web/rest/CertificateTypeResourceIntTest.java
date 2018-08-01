@@ -54,7 +54,7 @@ public class CertificateTypeResourceIntTest {
 
     @Autowired
     private CertificateTypeMapper certificateTypeMapper;
-    
+
 
     @Autowired
     private CertificateTypeService certificateTypeService;
@@ -177,7 +177,7 @@ public class CertificateTypeResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(certificateType.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())));
     }
-    
+
 
     @Test
     @Transactional
@@ -230,24 +230,6 @@ public class CertificateTypeResourceIntTest {
 
         // Get all the certificateTypeList where name is null
         defaultCertificateTypeShouldNotBeFound("name.specified=false");
-    }
-
-    @Test
-    @Transactional
-    public void getAllCertificateTypesByEmployeeSkillCertificateIsEqualToSomething() throws Exception {
-        // Initialize the database
-        EmployeeSkillCertificate employeeSkillCertificate = EmployeeSkillCertificateResourceIntTest.createEntity(em);
-        em.persist(employeeSkillCertificate);
-        em.flush();
-        certificateType.addEmployeeSkillCertificate(employeeSkillCertificate);
-        certificateTypeRepository.saveAndFlush(certificateType);
-        Long employeeSkillCertificateId = employeeSkillCertificate.getId();
-
-        // Get all the certificateTypeList where employeeSkillCertificate equals to employeeSkillCertificateId
-        defaultCertificateTypeShouldBeFound("employeeSkillCertificateId.equals=" + employeeSkillCertificateId);
-
-        // Get all the certificateTypeList where employeeSkillCertificate equals to employeeSkillCertificateId + 1
-        defaultCertificateTypeShouldNotBeFound("employeeSkillCertificateId.equals=" + (employeeSkillCertificateId + 1));
     }
 
     /**

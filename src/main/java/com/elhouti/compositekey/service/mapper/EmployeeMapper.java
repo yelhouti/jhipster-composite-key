@@ -15,7 +15,7 @@ public interface EmployeeMapper extends EntityMapper<EmployeeDTO, Employee> {
     @Mapping(target = "skills", ignore = true)
     Employee toEntity(EmployeeDTO employeeDTO);
 
-    default Employee fromId(Long id) {
+    default Employee fromId(String id) {
         if (id == null) {
             return null;
         }

@@ -17,10 +17,12 @@ export class EmployeeSkillCertificateResolve implements Resolve<IEmployeeSkillCe
     constructor(private service: EmployeeSkillCertificateService) {}
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-        const id = route.params['id'] ? route.params['id'] : null;
-        if (id) {
+        const employeeSkillEmployeeId = route.params['employeeSkillEmployeeId'] ? route.params['employeeSkillEmployeeId'] : null;
+        const employeeSkillName = route.params['employeeSkillName'] ? route.params['employeeSkillName'] : null;
+        const certificateTypeId = route.params['certificateTypeId'] ? route.params['certificateTypeId'] : null;
+        if (employeeSkillEmployeeId && employeeSkillName && certificateTypeId) {
             return this.service
-                .find(id)
+                .find(employeeSkillEmployeeId, employeeSkillName, certificateTypeId)
                 .pipe(map((employeeSkillCertificate: HttpResponse<EmployeeSkillCertificate>) => employeeSkillCertificate.body));
         }
         return of(new EmployeeSkillCertificate());
@@ -38,7 +40,7 @@ export const employeeSkillCertificateRoute: Routes = [
         canActivate: [UserRouteAccessService]
     },
     {
-        path: 'employee-skill-certificate/:id/view',
+        path: 'employee-skill-certificate/:employeeSkillEmployeeId/:employeeSkillName/:certificateTypeId/view',
         component: EmployeeSkillCertificateDetailComponent,
         resolve: {
             employeeSkillCertificate: EmployeeSkillCertificateResolve
@@ -62,7 +64,7 @@ export const employeeSkillCertificateRoute: Routes = [
         canActivate: [UserRouteAccessService]
     },
     {
-        path: 'employee-skill-certificate/:id/edit',
+        path: 'employee-skill-certificate/:employeeSkillEmployeeId/:employeeSkillName/:certificateTypeId/edit',
         component: EmployeeSkillCertificateUpdateComponent,
         resolve: {
             employeeSkillCertificate: EmployeeSkillCertificateResolve
@@ -77,7 +79,7 @@ export const employeeSkillCertificateRoute: Routes = [
 
 export const employeeSkillCertificatePopupRoute: Routes = [
     {
-        path: 'employee-skill-certificate/:id/delete',
+        path: 'employee-skill-certificate/:employeeSkillEmployeeId/:employeeSkillName/:certificateTypeId/delete',
         component: EmployeeSkillCertificateDeletePopupComponent,
         resolve: {
             employeeSkillCertificate: EmployeeSkillCertificateResolve

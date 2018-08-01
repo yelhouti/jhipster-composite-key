@@ -9,11 +9,6 @@ import io.github.jhipster.service.filter.IntegerFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
 
-
-
-
-
-
 /**
  * Criteria class for the EmployeeSkill entity. This class is used in EmployeeSkillResource to
  * receive all the possible filtering options from the Http GET request parameters.
@@ -25,26 +20,13 @@ import io.github.jhipster.service.filter.StringFilter;
 public class EmployeeSkillCriteria implements Serializable {
     private static final long serialVersionUID = 1L;
 
-
-    private LongFilter id;
-
     private StringFilter name;
 
     private IntegerFilter level;
 
-    private LongFilter employeeSkillCertificateId;
-
-    private LongFilter employeeId;
+    private StringFilter employeeId;
 
     public EmployeeSkillCriteria() {
-    }
-
-    public LongFilter getId() {
-        return id;
-    }
-
-    public void setId(LongFilter id) {
-        this.id = id;
     }
 
     public StringFilter getName() {
@@ -63,30 +45,20 @@ public class EmployeeSkillCriteria implements Serializable {
         this.level = level;
     }
 
-    public LongFilter getEmployeeSkillCertificateId() {
-        return employeeSkillCertificateId;
-    }
-
-    public void setEmployeeSkillCertificateId(LongFilter employeeSkillCertificateId) {
-        this.employeeSkillCertificateId = employeeSkillCertificateId;
-    }
-
-    public LongFilter getEmployeeId() {
+    public StringFilter getEmployeeId() {
         return employeeId;
     }
 
-    public void setEmployeeId(LongFilter employeeId) {
+    public void setEmployeeId(StringFilter employeeId) {
         this.employeeId = employeeId;
     }
 
     @Override
     public String toString() {
         return "EmployeeSkillCriteria{" +
-                (id != null ? "id=" + id + ", " : "") +
+                (employeeId != null ? "employeeId=" + employeeId + ", " : "") +
                 (name != null ? "name=" + name + ", " : "") +
                 (level != null ? "level=" + level + ", " : "") +
-                (employeeSkillCertificateId != null ? "employeeSkillCertificateId=" + employeeSkillCertificateId + ", " : "") +
-                (employeeId != null ? "employeeId=" + employeeId + ", " : "") +
             "}";
     }
 

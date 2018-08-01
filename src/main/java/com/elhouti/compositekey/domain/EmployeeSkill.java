@@ -20,13 +20,8 @@ public class EmployeeSkill implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @NotNull
-    @Column(name = "name", nullable = false)
-    private String name;
+    @EmbeddedId
+    private EmployeeSkillId id;
 
     @NotNull
     @Column(name = "jhi_level", nullable = false)
@@ -36,30 +31,18 @@ public class EmployeeSkill implements Serializable {
     private Set<EmployeeSkillCertificate> employeeSkillCertificates = new HashSet<>();
 
     @ManyToOne(optional = false)
+    @JoinColumn(name="employee_id ", insertable = false, updatable = false)
     @NotNull
     @JsonIgnoreProperties("skills")
     private Employee employee;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
-    public Long getId() {
+    public EmployeeSkillId getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(EmployeeSkillId id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public EmployeeSkill name(String name) {
-        this.name = name;
-        return this;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public Integer getLevel() {
@@ -138,7 +121,6 @@ public class EmployeeSkill implements Serializable {
     public String toString() {
         return "EmployeeSkill{" +
             "id=" + getId() +
-            ", name='" + getName() + "'" +
             ", level=" + getLevel() +
             "}";
     }

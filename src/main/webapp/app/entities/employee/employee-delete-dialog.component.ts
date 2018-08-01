@@ -20,7 +20,7 @@ export class EmployeeDeleteDialogComponent {
         this.activeModal.dismiss('cancel');
     }
 
-    confirmDelete(id: number) {
+    confirmDelete(id: string) {
         this.employeeService.delete(id).subscribe(response => {
             this.eventManager.broadcast({
                 name: 'employeeListModification',

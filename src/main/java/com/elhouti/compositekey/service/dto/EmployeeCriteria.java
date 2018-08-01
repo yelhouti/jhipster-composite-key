@@ -9,11 +9,6 @@ import io.github.jhipster.service.filter.IntegerFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
 
-
-
-
-
-
 /**
  * Criteria class for the Employee entity. This class is used in EmployeeResource to
  * receive all the possible filtering options from the Http GET request parameters.
@@ -26,20 +21,18 @@ public class EmployeeCriteria implements Serializable {
     private static final long serialVersionUID = 1L;
 
 
-    private LongFilter id;
+    private StringFilter id;
 
     private StringFilter fullname;
-
-    private LongFilter skillId;
 
     public EmployeeCriteria() {
     }
 
-    public LongFilter getId() {
+    public StringFilter getId() {
         return id;
     }
 
-    public void setId(LongFilter id) {
+    public void setId(StringFilter id) {
         this.id = id;
     }
 
@@ -51,20 +44,11 @@ public class EmployeeCriteria implements Serializable {
         this.fullname = fullname;
     }
 
-    public LongFilter getSkillId() {
-        return skillId;
-    }
-
-    public void setSkillId(LongFilter skillId) {
-        this.skillId = skillId;
-    }
-
     @Override
     public String toString() {
         return "EmployeeCriteria{" +
                 (id != null ? "id=" + id + ", " : "") +
                 (fullname != null ? "fullname=" + fullname + ", " : "") +
-                (skillId != null ? "skillId=" + skillId + ", " : "") +
             "}";
     }
 

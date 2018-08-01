@@ -11,14 +11,17 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring", uses = {EmployeeMapper.class})
 public interface EmployeeSkillMapper extends EntityMapper<EmployeeSkillDTO, EmployeeSkill> {
 
-    @Mapping(source = "employee.id", target = "employeeId")
+    @Mapping(source = "id.employeeId", target = "employeeId")
+    @Mapping(source = "id.name", target = "name")
     EmployeeSkillDTO toDto(EmployeeSkill employeeSkill);
 
     @Mapping(target = "employeeSkillCertificates", ignore = true)
     @Mapping(source = "employeeId", target = "employee")
+    @Mapping(source = "employeeId", target = "id.employeeId")
+    @Mapping(source = "name", target = "id.name")
     EmployeeSkill toEntity(EmployeeSkillDTO employeeSkillDTO);
 
-    default EmployeeSkill fromId(Long id) {
+    default EmployeeSkill fromId(EmployeeSkillId id) {
         if (id == null) {
             return null;
         }

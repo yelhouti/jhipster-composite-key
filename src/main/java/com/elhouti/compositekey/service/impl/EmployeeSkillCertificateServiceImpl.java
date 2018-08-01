@@ -1,5 +1,6 @@
 package com.elhouti.compositekey.service.impl;
 
+import com.elhouti.compositekey.domain.EmployeeSkillCertificateId;
 import com.elhouti.compositekey.service.EmployeeSkillCertificateService;
 import com.elhouti.compositekey.domain.EmployeeSkillCertificate;
 import com.elhouti.compositekey.repository.EmployeeSkillCertificateRepository;
@@ -70,7 +71,7 @@ public class EmployeeSkillCertificateServiceImpl implements EmployeeSkillCertifi
      */
     @Override
     @Transactional(readOnly = true)
-    public Optional<EmployeeSkillCertificateDTO> findOne(Long id) {
+    public Optional<EmployeeSkillCertificateDTO> findOne(EmployeeSkillCertificateId id) {
         log.debug("Request to get EmployeeSkillCertificate : {}", id);
         return employeeSkillCertificateRepository.findById(id)
             .map(employeeSkillCertificateMapper::toDto);
@@ -82,7 +83,7 @@ public class EmployeeSkillCertificateServiceImpl implements EmployeeSkillCertifi
      * @param id the id of the entity
      */
     @Override
-    public void delete(Long id) {
+    public void delete(EmployeeSkillCertificateId id) {
         log.debug("Request to delete EmployeeSkillCertificate : {}", id);
         employeeSkillCertificateRepository.deleteById(id);
     }

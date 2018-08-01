@@ -1,5 +1,6 @@
 package com.elhouti.compositekey.service;
 
+import com.elhouti.compositekey.domain.EmployeeSkillCertificateId;
 import com.elhouti.compositekey.service.dto.EmployeeSkillCertificateDTO;
 
 import java.util.List;
@@ -32,12 +33,12 @@ public interface EmployeeSkillCertificateService {
      * @param id the id of the entity
      * @return the entity
      */
-    Optional<EmployeeSkillCertificateDTO> findOne(Long id);
+    Optional<EmployeeSkillCertificateDTO> findOne(EmployeeSkillCertificateId id);
 
     /**
      * Delete the "id" employeeSkillCertificate.
      *
      * @param id the id of the entity
      */
-    void delete(Long id);
+    void delete(EmployeeSkillCertificateId id);
 }

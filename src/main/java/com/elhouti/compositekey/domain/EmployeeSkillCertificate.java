@@ -18,9 +18,8 @@ public class EmployeeSkillCertificate implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @EmbeddedId
+    private EmployeeSkillCertificateId id;
 
     @NotNull
     @Column(name = "grade", nullable = false)
@@ -31,21 +30,26 @@ public class EmployeeSkillCertificate implements Serializable {
     private LocalDate date;
 
     @ManyToOne(optional = false)
+    @JoinColumn(name="certificate_type_id", insertable = false, updatable = false)
     @NotNull
     @JsonIgnoreProperties("employeeSkillCertificates")
     private CertificateType certificateType;
 
     @ManyToOne(optional = false)
+    @JoinColumns({
+        @JoinColumn(name = "employee_skill_employee_id", insertable = false, updatable = false),
+        @JoinColumn(name = "employee_skill_name", insertable = false, updatable = false)
+    })
     @NotNull
     @JsonIgnoreProperties("employeeSkillCertificates")
     private EmployeeSkill employeeSkill;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
-    public Long getId() {
+    public EmployeeSkillCertificateId getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(EmployeeSkillCertificateId id) {
         this.id = id;
     }
 

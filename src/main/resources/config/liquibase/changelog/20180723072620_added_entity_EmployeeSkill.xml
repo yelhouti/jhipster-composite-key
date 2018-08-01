@@ -19,24 +19,21 @@
     -->
     <changeSet id="20180723072620-1" author="jhipster">
         <createTable tableName="employee_skill">
-            <column name="id" type="bigint" autoIncrement="${autoIncrement}">
-                <constraints primaryKey="true" nullable="false"/>
+            <column name="employee_id" type="varchar(255)">
+                <constraints primaryKey="true" nullable="false" />
             </column>
+
             <column name="name" type="varchar(255)">
-                <constraints nullable="false" />
+                <constraints primaryKey="true" nullable="false" />
             </column>
 
             <column name="jhi_level" type="integer">
                 <constraints nullable="false" />
             </column>
 
-            <column name="employee_id" type="bigint">
-                <constraints nullable="false" />
-            </column>
-
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
-        
+
     </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
 </databaseChangeLog>

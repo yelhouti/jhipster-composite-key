@@ -10,6 +10,7 @@ describe('Service Tests', () => {
         let injector: TestBed;
         let service: EmployeeService;
         let httpMock: HttpTestingController;
+        const DEFAULT_EMPLOYEE_ID = 'AAAAAAA';
 
         beforeEach(() => {
             TestBed.configureTestingModule({
@@ -22,12 +23,12 @@ describe('Service Tests', () => {
 
         describe('Service methods', () => {
             it('should call correct URL', () => {
-                service.find(123).subscribe(() => {});
+                service.find(DEFAULT_EMPLOYEE_ID).subscribe(() => {});
 
                 const req = httpMock.expectOne({ method: 'GET' });
 
                 const resourceUrl = SERVER_API_URL + 'api/employees';
-                expect(req.request.url).toEqual(resourceUrl + '/' + 123);
+                expect(req.request.url).toEqual(resourceUrl + '/' + DEFAULT_EMPLOYEE_ID);
             });
 
             it('should create a Employee', () => {
@@ -40,35 +41,35 @@ describe('Service Tests', () => {
             });
 
             it('should update a Employee', () => {
-                service.update(new Employee(123)).subscribe(received => {
-                    expect(received.body.id).toEqual(123);
+                service.update(new Employee(DEFAULT_EMPLOYEE_ID)).subscribe(received => {
+                    expect(received.body.id).toEqual(DEFAULT_EMPLOYEE_ID);
                 });
 
                 const req = httpMock.expectOne({ method: 'PUT' });
-                req.flush({ id: 123 });
+                req.flush({ id: DEFAULT_EMPLOYEE_ID });
             });
 
             it('should return a Employee', () => {
-                service.find(123).subscribe(received => {
-                    expect(received.body.id).toEqual(123);
+                service.find(DEFAULT_EMPLOYEE_ID).subscribe(received => {
+                    expect(received.body.id).toEqual(DEFAULT_EMPLOYEE_ID);
                 });
 
                 const req = httpMock.expectOne({ method: 'GET' });
-                req.flush({ id: 123 });
+                req.flush({ id: DEFAULT_EMPLOYEE_ID });
             });
 
             it('should return a list of Employee', () => {
                 service.query(null).subscribe(received => {
-                    expect(received.body[0].id).toEqual(123);
+                    expect(received.body[0].id).toEqual(DEFAULT_EMPLOYEE_ID);
                 });
 
                 const req = httpMock.expectOne({ method: 'GET' });
-                req.flush([new Employee(123)]);
+                req.flush([new Employee(DEFAULT_EMPLOYEE_ID)]);
             });
 
             it('should delete a Employee', () => {
-                service.delete(123).subscribe(received => {
-                    expect(received.url).toContain('/' + 123);
+                service.delete(DEFAULT_EMPLOYEE_ID).subscribe(received => {
+                    expect(received.url).toContain('/' + DEFAULT_EMPLOYEE_ID);
                 });
 
                 const req = httpMock.expectOne({ method: 'DELETE' });
@@ -76,7 +77,7 @@ describe('Service Tests', () => {
             });
 
             it('should propagate not found response', () => {
-                service.find(123).subscribe(null, (_error: any) => {
+                service.find(DEFAULT_EMPLOYEE_ID).subscribe(null, (_error: any) => {
                     expect(_error.status).toEqual(404);
                 });
 

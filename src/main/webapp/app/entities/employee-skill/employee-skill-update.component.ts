@@ -16,6 +16,7 @@ import { EmployeeService } from 'app/entities/employee';
 export class EmployeeSkillUpdateComponent implements OnInit {
     private _employeeSkill: IEmployeeSkill;
     isSaving: boolean;
+    edit: boolean;
 
     employees: IEmployee[];
 
@@ -30,6 +31,7 @@ export class EmployeeSkillUpdateComponent implements OnInit {
         this.isSaving = false;
         this.activatedRoute.data.subscribe(({ employeeSkill }) => {
             this.employeeSkill = employeeSkill;
+            this.edit = this.employeeSkill.employeeId !== undefined && this.employeeSkill.name !== undefined;
         });
         this.employeeService.query().subscribe(
             (res: HttpResponse<IEmployee[]>) => {
@@ -45,7 +47,7 @@ export class EmployeeSkillUpdateComponent implements OnInit {
 
     save() {
         this.isSaving = true;
-        if (this.employeeSkill.id !== undefined) {
+        if (this.edit) {
             this.subscribeToSaveResponse(this.employeeSkillService.update(this.employeeSkill));
         } else {
             this.subscribeToSaveResponse(this.employeeSkillService.create(this.employeeSkill));

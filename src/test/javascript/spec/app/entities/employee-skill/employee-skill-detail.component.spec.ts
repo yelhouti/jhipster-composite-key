@@ -11,7 +11,9 @@ describe('Component Tests', () => {
     describe('EmployeeSkill Management Detail Component', () => {
         let comp: EmployeeSkillDetailComponent;
         let fixture: ComponentFixture<EmployeeSkillDetailComponent>;
-        const route = ({ data: of({ employeeSkill: new EmployeeSkill(123) }) } as any) as ActivatedRoute;
+        const DEFAULT_EMPLOYEE_ID = 'AAAAAAAAAAA';
+        const DEFAULT_NAME = 'AAAAAAAAAAA';
+        const route = ({ data: of({ employeeSkill: new EmployeeSkill(DEFAULT_EMPLOYEE_ID, DEFAULT_NAME) }) } as any) as ActivatedRoute;
 
         beforeEach(() => {
             TestBed.configureTestingModule({
@@ -33,7 +35,7 @@ describe('Component Tests', () => {
                 comp.ngOnInit();
 
                 // THEN
-                expect(comp.employeeSkill).toEqual(jasmine.objectContaining({ id: 123 }));
+                expect(comp.employeeSkill).toEqual(jasmine.objectContaining({ employeeId: DEFAULT_EMPLOYEE_ID, name: DEFAULT_NAME }));
             });
         });
     });
